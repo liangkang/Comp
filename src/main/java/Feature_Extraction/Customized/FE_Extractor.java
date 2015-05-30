@@ -28,20 +28,6 @@ public class FE_Extractor {
     //reformat() convert data of format 2 to features you need
     //mapping() returns feature mapping (i.e. feature name and its corresponding dimension index)
 	
-	static class userStat{
-		// 用户特征统计类
-		String user;
-		HashMap<String,Integer> map_u_c;
-		HashMap<String,HashSet<String>> map_u_m;
-		HashMap<String,HashSet<Integer>> map_u_d;
-		HashMap<String,Integer> map_all_c;
-		HashMap<String,HashSet<String>> map_all_m;
-		HashMap<String,HashSet<Date>> map_all_d;
-		
-		public  userStat(String user) {
-			this.user = user;
-		}
-	}
 	
     public static HashMap<String,Integer> mapping()
     {
@@ -68,18 +54,26 @@ public class FE_Extractor {
         			count++;
         		}
         //user feature index
-//        for(int month=5;month<=11;month++)
-//        	for(int action=0;action<=3;action++)
-//        		for(int stat_type=0;stat_type<=4;stat_type++){
-//        			map.put("u"+month+"|"+action+"|"+stat_type,count);
-//        			count++;
-//        		}
-//        for(int action=0;action<=3;action++)
-//    		for(int stat_type=0;stat_type<=4;stat_type++)
-//    		{
-//    			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
-//    			count++;
-//    		}
+        for(int month=5;month<=11;month++)
+        	for(int action=0;action<=3;action++)
+        		for(int stat_type=0;stat_type<=4;stat_type++){
+        			map.put("u"+month+"|"+action+"|"+stat_type,count);
+        			count++;
+        		}
+        for(int action=0;action<=3;action++)
+    		for(int stat_type=0;stat_type<=4;stat_type++)
+    		{
+    			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
+    			count++;
+    		}
+        for (int age=0;age<=8;age++){
+        	map.put("u|age|"+age, count);
+        	count++;
+        }
+        for (int gender=0;gender<=2;gender++){
+        	map.put("u|gender|"+gender, count);
+        	count++;
+        }
         return map;
     }
 
@@ -386,7 +380,7 @@ public class FE_Extractor {
             similarity_merchants.put(strs[0],list);
         }
         //extract user feature
-//        HashMap<String,String> uf_map = extractUserFeature(data_raw_list);
+        HashMap<String,String> uf_map = extractUserFeature(data_raw_list);
 
         //the feature is defined by behavior log on itself and  top 5 similar merchants
         for(int i=0;i<num;i++){
@@ -403,7 +397,18 @@ public class FE_Extractor {
                         d2.features += "," + activity_log2feature(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)));
                     }
                 }
-//                d2.features += "," + uf_map.get(d.user_id);
+                d2.features += "," + uf_map.get(d.user_id);
+                // age
+                if (d.age_range!=null)
+                	d2.features += "," + "u|age|" + d.age_range + ":" + "1";
+                else
+                	d2.features += "," + "u|age|" + "0" + ":" + "1";
+                // gender
+                if (d.gender!=null)
+                	d2.features += "," + "u|gender|" + d.gender + ":" + "1";
+                else
+                	d2.features += "," + "u|gender|" + "2" + ":" + "1";
+                
                 data_list.add(d2);
             }
         }

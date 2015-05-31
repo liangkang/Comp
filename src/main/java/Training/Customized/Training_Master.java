@@ -93,6 +93,6 @@ public class Training_Master {
     }
 
     public  void run() {
-    	FISTA_master();
+    	GradientDescent_master();
     }
 }

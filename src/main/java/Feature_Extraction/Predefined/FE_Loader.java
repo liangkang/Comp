@@ -10,7 +10,7 @@ import com.aliyun.odps.io.WritableRecord;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Random;
+//import java.util.Random;
 
 public class FE_Loader extends
 		GraphLoader<Text, FE_VertexValue, NullWritable, NullWritable> {
@@ -57,8 +57,8 @@ public class FE_Loader extends
 		else
 			data.activity_log = "-999";
 
-		Random r = new Random();
-		Integer vID = Math.abs(r.nextInt()%context.getConfiguration().getInt("number_of_vertices",10));
+		
+		Integer vID = Math.abs(Integer.parseInt(data.user_id)%context.getConfiguration().getInt("number_of_vertices",10));
 		vertex.setId(new Text(vID.toString()));
 
 

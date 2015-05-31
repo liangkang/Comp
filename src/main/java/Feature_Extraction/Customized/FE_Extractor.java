@@ -16,6 +16,7 @@ class userStat{
 	HashMap<String,HashSet<Integer>> map_u_d;
 	HashMap<String,Integer> map_all_c;
 	HashMap<String,HashSet<String>> map_all_m;
+	HashMap<String,HashSet<String>> map_all_m2;
 	HashMap<String,HashSet<Date>> map_all_d;
 	
 	public  userStat(String user) {
@@ -61,17 +62,17 @@ public class FE_Extractor {
         			count++;
         		}
         for(int action=0;action<=3;action++)
-    		for(int stat_type=0;stat_type<=4;stat_type++)
+    		for(int stat_type=0;stat_type<=5;stat_type++)
     		{
     			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
     			count++;
     		}
         //用户购买可能性feature index
-        map.put("u"+"0"+"|"+"0"+"|"+"5", count);
+        map.put("u"+"0"+"|"+"0"+"|"+"6", count);
 		count++;
-		map.put("u"+"0"+"|"+"1"+"|"+"5", count);
+		map.put("u"+"0"+"|"+"1"+"|"+"6", count);
 		count++;
-		map.put("u"+"0"+"|"+"3"+"|"+"5", count);
+		map.put("u"+"0"+"|"+"3"+"|"+"6", count);
 		count++;
         for (int age=0;age<=8;age++){
         	map.put("u|age|"+age, count);
@@ -232,6 +233,7 @@ public class FE_Extractor {
 				us.map_u_c = new HashMap<String, Integer>();
 				us.map_u_d = new HashMap<String, HashSet<Integer>>();
 				us.map_u_m = new HashMap<String, HashSet<String>>();
+				us.map_all_m2 = new HashMap<String, HashSet<String>>();
 				//map_user.put(d.user_id, us);
 			}
 			String [] strs = d.activity_log.split("#");
@@ -252,6 +254,17 @@ public class FE_Extractor {
 	                // 用户整个时间段|行为 merchant set
 	                if(us.map_all_m.containsKey("0"+"|"+strs2[4])){
 	                	HashSet<String> set_m = us.map_all_m.get("0"+"|"+strs2[4]);
+	                	if(set_m.contains(d.merchant_id)){
+	                		if(us.map_all_m2.containsKey("0"+"|"+strs2[4])){
+	                			HashSet<String> set_m2 = us.map_all_m2.get("0"+"|"+strs2[4]);
+	                			set_m2.add(d.merchant_id);
+	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
+	                		}else{
+	                			HashSet<String> set_m2 = new HashSet<String>();
+	                			set_m2.add(d.merchant_id);
+	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
+	                		}
+	                	}
 	                	set_m.add(d.merchant_id);
 	                	us.map_all_m.put("0"+"|"+strs2[4], set_m);
 	                } else{
@@ -311,10 +324,10 @@ public class FE_Extractor {
 			for(Map.Entry<String,Integer> entry2: us1.map_all_c.entrySet()){
 	        	// 整个时间段行为数
 	            feature += "u"+entry2.getKey()+"|0"+":"+Math.log((double)entry2.getValue()+1)+",";
-	            // 购买可能行：购买数/行为数
+	            // 购买可能性：购买数/行为数
 	            String [] strsk = entry2.getKey().split("\\|");
 	            if (!strsk[1].equals("2")&&us1.map_all_c.containsKey("0|2")){
-	            	feature += "u"+entry2.getKey()+"|5"+":"+(double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+",";
+	            	feature += "u"+entry2.getKey()+"|6"+":"+(double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+",";
 	            }
 	        }
 			for(Map.Entry<String,HashSet<Date>> entry2: us1.map_all_d.entrySet()){
@@ -328,6 +341,10 @@ public class FE_Extractor {
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m.entrySet()){
 	        	// 整个时间段行为m数
 	            feature += "u"+entry2.getKey()+"|3"+":"+Math.log((double)entry2.getValue().size()+1)+",";
+	        }
+			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m2.entrySet()){
+	        	// 整个时间段重复行为m数
+	            feature += "u"+entry2.getKey()+"|5"+":"+Math.log((double)entry2.getValue().size()+1)+",";
 	        }
 			for(Map.Entry<String,Integer> entry2: us1.map_u_c.entrySet()){
 				// 每个月行为数
@@ -412,13 +429,16 @@ public class FE_Extractor {
                 }
                 d2.features += "," + uf_map.get(d.user_id);
                 // age
-                if (d.age_range==null||d.age_range.equals("")){
+                if (d.age_range==null||d.age_range.equals("-999")){
                 	d2.features += "," + "u|age|" + "0" + ":" + "1";
                 }else{
+//                	if(Integer.parseInt(d.age_range)<0||Integer.parseInt(d.age_range)>8){
+//                		System.out.println(d.age_range);
+//                	}
                 	d2.features += "," + "u|age|" + d.age_range + ":" + "1";
                 }
                 // gender
-                if (d.gender==null||d.gender.equals("")){
+                if (d.gender==null||d.gender.equals("-999")){
                 	d2.features += "," + "u|gender|" + "2" + ":" + "1";
                 }else{
                 	d2.features += "," + "u|gender|" + d.gender + ":" + "1";

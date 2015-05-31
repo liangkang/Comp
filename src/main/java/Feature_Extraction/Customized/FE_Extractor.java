@@ -66,10 +66,17 @@ public class FE_Extractor {
     			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
     			count++;
     		}
-        for (int age=0;age<=8;age++){
-        	map.put("u|age|"+age, count);
-        	count++;
-        }
+        //用户购买可能性feature index
+        map.put("u"+"0"+"|"+"0"+"|"+"5", count);
+		count++;
+		map.put("u"+"0"+"|"+"1"+"|"+"5", count);
+		count++;
+		map.put("u"+"0"+"|"+"3"+"|"+"5", count);
+		count++;
+//        for (int age=0;age<=8;age++){
+//        	map.put("u|age|"+age, count);
+//        	count++;
+//        }
         for (int gender=0;gender<=2;gender++){
         	map.put("u|gender|"+gender, count);
         	count++;
@@ -304,6 +311,11 @@ public class FE_Extractor {
 			for(Map.Entry<String,Integer> entry2: us1.map_all_c.entrySet()){
 	        	// 整个时间段行为数
 	            feature += "u"+entry2.getKey()+"|0"+":"+Math.log((double)entry2.getValue()+1)+",";
+	            // 购买可能行：购买数/行为数
+	            String [] strsk = entry2.getKey().split("\\|");
+	            if (!strsk[1].equals("2")&&us1.map_all_c.containsKey("0|2")){
+	            	feature += "u"+entry2.getKey()+"|5"+":"+(double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+",";
+	            }
 	        }
 			for(Map.Entry<String,HashSet<Date>> entry2: us1.map_all_d.entrySet()){
 	        	// 整个时间段行为天数
@@ -334,6 +346,7 @@ public class FE_Extractor {
 	        	// 每个月行为m数
 	            feature += "u"+entry2.getKey()+"|3"+":"+Math.log((double)entry2.getValue().size()+1)+",";
 	        }
+			
 			if(feature!=null&&!feature.equals("")){
 				//System.out.println(feature.length());
 				feature = feature.substring(0,feature.length()-2);
@@ -345,13 +358,13 @@ public class FE_Extractor {
 	}
     
     //merchant特征提取
-    public static HashMap<String,String> extractMerchantFeature(List<FE_Data_Raw> data_raw_list){
-    	int num = data_raw_list.size();
-		Date last_day = new Date(2014,11,12);
-		HashMap<String,String> merchant_feature_map = new HashMap<String, String>();
-		
-		return merchant_feature_map;
-    }
+//    public static HashMap<String,String> extractMerchantFeature(List<FE_Data_Raw> data_raw_list){
+//    	int num = data_raw_list.size();
+//		Date last_day = new Date(2014,11,12);
+//		HashMap<String,String> merchant_feature_map = new HashMap<String, String>();
+//		
+//		return merchant_feature_map;
+//    }
 
     //convert the data of format 2 to your desire format,
     //data_raw_list the list of raw data
@@ -399,16 +412,17 @@ public class FE_Extractor {
                 }
                 d2.features += "," + uf_map.get(d.user_id);
                 // age
-                if (d.age_range!=null)
-                	d2.features += "," + "u|age|" + d.age_range + ":" + "1";
-                else
+                if (d.age_range==null||d.age_range.equals("")){
                 	d2.features += "," + "u|age|" + "0" + ":" + "1";
+                }else{
+                	d2.features += "," + "u|age|" + d.age_range + ":" + "1";
+                }
                 // gender
-                if (d.gender!=null)
-                	d2.features += "," + "u|gender|" + d.gender + ":" + "1";
-                else
+                if (d.gender==null||d.gender.equals("")){
                 	d2.features += "," + "u|gender|" + "2" + ":" + "1";
-                
+                }else{
+                	d2.features += "," + "u|gender|" + d.gender + ":" + "1";
+                }
                 data_list.add(d2);
             }
         }

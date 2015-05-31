@@ -73,10 +73,10 @@ public class FE_Extractor {
 		count++;
 		map.put("u"+"0"+"|"+"3"+"|"+"5", count);
 		count++;
-//        for (int age=0;age<=8;age++){
-//        	map.put("u|age|"+age, count);
-//        	count++;
-//        }
+        for (int age=0;age<=8;age++){
+        	map.put("u|age|"+age, count);
+        	count++;
+        }
         for (int gender=0;gender<=2;gender++){
         	map.put("u|gender|"+gender, count);
         	count++;

@@ -46,7 +46,7 @@ public class Testing_Predictor {
                 int j = feature_map.get(strs2[0]);
                 sv.set(j, Double.parseDouble(strs2[1]));
             }
-            prediction_list.add(new Testing_Data(d.user_id, d.merchant_id, -sv.dot(vec)));
+            prediction_list.add(new Testing_Data(d.user_id, d.merchant_id, sv.dot(vec)));
         }
 
         return prediction_list;

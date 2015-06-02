@@ -49,7 +49,7 @@ public class FE_Extractor {
                 	}
         for(int rank=0;rank<6;rank++)
         	for(int action=0;action<=3;action++)
-        		for(int stat_type=0;stat_type<=5;stat_type++)
+        		for(int stat_type=0;stat_type<=6;stat_type++)
         		{
         			map.put(rank+"|"+"0"+"|"+action+"|"+stat_type, count);
         			count++;
@@ -67,6 +67,12 @@ public class FE_Extractor {
     			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
     			count++;
     		}
+        for(int action=0;action<=3;action++)
+    		for(int stat_type=7;stat_type<=9;stat_type++)
+    		{
+    			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
+    			count++;
+    		}
         //用户购买可能性feature index
         map.put("u"+"0"+"|"+"0"+"|"+"6", count);
 		count++;
@@ -74,6 +80,7 @@ public class FE_Extractor {
 		count++;
 		map.put("u"+"0"+"|"+"3"+"|"+"6", count);
 		count++;
+		//用户age&gender index
         for (int age=0;age<=8;age++){
         	map.put("u|age|"+age, count);
         	count++;
@@ -185,6 +192,8 @@ public class FE_Extractor {
         for(Map.Entry<String, HashSet<Date>> entry: map_all_dat.entrySet()){
         	// 整个时间段最近行为时间差
         	feature += rank+"|"+entry.getKey()+"|5"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
+        	// 整个时间段最远行为时间差
+        	feature += rank+"|"+entry.getKey()+"|6"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
         }
         for(Map.Entry<String,Integer> entry: map.entrySet()){
         	// 行为数
@@ -337,10 +346,16 @@ public class FE_Extractor {
 	            feature += "u"+entry2.getKey()+"|2"+":"+us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
 	            // 整个时间段最近时间差
 	            feature += "u"+entry2.getKey()+"|4"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
+	            // 整个时间段最远时间差
+	            feature += "u"+entry2.getKey()+"|8"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000))+",";
+	            // 整个时间段最近-最远时间差
+	            feature += "u"+entry2.getKey()+"|9"+":"+(double)(Collections.max(entry2.getValue()).getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m.entrySet()){
 	        	// 整个时间段行为m数
 	            feature += "u"+entry2.getKey()+"|3"+":"+Math.log((double)entry2.getValue().size()+1)+",";
+	            // 整个时间段行为m数/行为数
+	            feature += "u"+entry2.getKey()+"|7"+":"+(double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+",";
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m2.entrySet()){
 	        	// 整个时间段重复行为m数
@@ -368,7 +383,7 @@ public class FE_Extractor {
 				//System.out.println(feature.length());
 				feature = feature.substring(0,feature.length()-2);
 			}
-				
+			
 			user_feature_map.put(user,feature);
 		}
 		return user_feature_map;
@@ -382,10 +397,11 @@ public class FE_Extractor {
 //		
 //		return merchant_feature_map;
 //    }
+    
 
     //convert the data of format 2 to your desire format,
     //data_raw_list the list of raw data
-    //auxiliary_data is any auxilary data you needed, which is stored in table "auxi_table"
+    //auxiliary_data is any auxiliary data you needed, which is stored in table "auxi_table"
     public static List<FE_Data_Processed> reformat(List<FE_Data_Raw> data_raw_list, List<String> auxilary_data){
         List<FE_Data_Processed> data_list = new LinkedList<FE_Data_Processed>();
 

@@ -68,7 +68,7 @@ public class FE_Extractor {
     			count++;
     		}
         for(int action=0;action<=3;action++)
-    		for(int stat_type=7;stat_type<=9;stat_type++)
+    		for(int stat_type=7;stat_type<=8;stat_type++)
     		{
     			map.put("u"+"0"+"|"+action+"|"+stat_type, count);
     			count++;
@@ -89,6 +89,22 @@ public class FE_Extractor {
         	map.put("u|gender|"+gender, count);
         	count++;
         }
+        //merchant特征
+        for (int action=0;action<=3;action++)
+        	for(int stat_type=0;stat_type<=6;stat_type++){
+        		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
+        		count++;
+        	}
+        map.put("m"+"0"+"|"+"7", count);
+        count++;
+        map.put("m"+"0"+"|"+"8", count);
+        count++;
+        for (int month=5;month<=11;month++)
+        	for (int action=0;action<=3;action++)
+        		for (int stat_type=0;stat_type<=5;stat_type++){
+        			map.put("m"+month+"|"+action+"|"+stat_type, count);
+        			count++;
+        		}
         return map;
     }
 
@@ -190,10 +206,10 @@ public class FE_Extractor {
         	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map_all_c.get(entry.getKey())+",";
         }
         for(Map.Entry<String, HashSet<Date>> entry: map_all_dat.entrySet()){
-        	// 整个时间段最近行为时间差
-        	feature += rank+"|"+entry.getKey()+"|5"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
-        	// 整个时间段最远行为时间差
-        	feature += rank+"|"+entry.getKey()+"|6"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
+        	// 整个时间段最近行为时间差倒数
+        	feature += rank+"|"+entry.getKey()+"|5"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
+        	// 整个时间段最远行为时间差倒数
+        	feature += rank+"|"+entry.getKey()+"|6"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
         }
         for(Map.Entry<String,Integer> entry: map.entrySet()){
         	// 行为数
@@ -263,23 +279,33 @@ public class FE_Extractor {
 	                // 用户整个时间段|行为 merchant set
 	                if(us.map_all_m.containsKey("0"+"|"+strs2[4])){
 	                	HashSet<String> set_m = us.map_all_m.get("0"+"|"+strs2[4]);
-	                	if(set_m.contains(d.merchant_id)){
-	                		if(us.map_all_m2.containsKey("0"+"|"+strs2[4])){
-	                			HashSet<String> set_m2 = us.map_all_m2.get("0"+"|"+strs2[4]);
-	                			set_m2.add(d.merchant_id);
-	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
-	                		}else{
-	                			HashSet<String> set_m2 = new HashSet<String>();
-	                			set_m2.add(d.merchant_id);
-	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
-	                		}
-	                	}
+//	                	if(set_m.contains(d.merchant_id)){
+//	                		if(us.map_all_m2.containsKey("0"+"|"+strs2[4])){
+//	                			HashSet<String> set_m2 = us.map_all_m2.get("0"+"|"+strs2[4]);
+//	                			set_m2.add(d.merchant_id);
+//	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
+//	                		}else{
+//	                			HashSet<String> set_m2 = new HashSet<String>();
+//	                			set_m2.add(d.merchant_id);
+//	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
+//	                		}
+//	                	}
 	                	set_m.add(d.merchant_id);
 	                	us.map_all_m.put("0"+"|"+strs2[4], set_m);
 	                } else{
 	                	HashSet<String> set_m = new HashSet<String>();
 	                	set_m.add(d.merchant_id);
 	                	us.map_all_m.put("0"+"|"+strs2[4], set_m);
+	                }
+	                // 用户整个时间段|行为 merchant+month+day
+	                if(us.map_all_m2.containsKey("0"+"|"+strs2[4])){
+	                	HashSet<String> set_m2 = us.map_all_m2.get("0"+"|"+strs2[4]);
+	                	set_m2.add(month+day+","+d.merchant_id);
+	                	us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
+	                } else{
+	                	HashSet<String> set_m2 = new HashSet<String>();
+	                	set_m2.add(month+day+","+d.merchant_id);
+	                	us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
 	                }
 	                // 用户整个时间段|行为 date set
 	                if(us.map_all_d.containsKey("0"+"|"+strs2[4])){
@@ -344,12 +370,12 @@ public class FE_Extractor {
 	            feature += "u"+entry2.getKey()+"|1"+":"+Math.log((double)entry2.getValue().size()+1)+",";
 	            // 整个时间段行为数/行为天数
 	            feature += "u"+entry2.getKey()+"|2"+":"+us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
-	            // 整个时间段最近时间差
-	            feature += "u"+entry2.getKey()+"|4"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
-	            // 整个时间段最远时间差
-	            feature += "u"+entry2.getKey()+"|8"+":"+Math.log((double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000))+",";
+	            // 整个时间段最近时间差倒数
+	            feature += "u"+entry2.getKey()+"|4"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
+	            // 整个时间段最远时间差倒数
+	            feature += "u"+entry2.getKey()+"|8"+":"+1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	            // 整个时间段最近-最远时间差
-	            feature += "u"+entry2.getKey()+"|9"+":"+(double)(Collections.max(entry2.getValue()).getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
+	            //feature += "u"+entry2.getKey()+"|9"+":"+1/(double)(Collections.max(entry2.getValue()).getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m.entrySet()){
 	        	// 整个时间段行为m数
@@ -359,7 +385,23 @@ public class FE_Extractor {
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m2.entrySet()){
 	        	// 整个时间段重复行为m数
-	            feature += "u"+entry2.getKey()+"|5"+":"+Math.log((double)entry2.getValue().size()+1)+",";
+//	            feature += "u"+entry2.getKey()+"|5"+":"+Math.log((double)entry2.getValue().size()+1)+",";
+				HashMap<String,Integer> mcount = new HashMap<String, Integer>();
+				for(String str : entry2.getValue()){
+					String [] str2 = str.split(",");
+					if(mcount.containsKey(str2[1])){
+						mcount.put(str2[1], mcount.get(str2[1])+1);
+					}else{
+						mcount.put(str2[1],1);
+					}
+				}
+				int c = 0;
+				for(Map.Entry<String, Integer> entry3: mcount.entrySet()){
+					if(entry3.getValue()>1)
+						c++;
+				}
+				if(c>0)
+					feature += "u"+entry2.getKey()+"|5"+":"+c+",";
 	        }
 			for(Map.Entry<String,Integer> entry2: us1.map_u_c.entrySet()){
 				// 每个月行为数
@@ -416,7 +458,8 @@ public class FE_Extractor {
         //in this example, the auxiliary data is top 5 similar merchants of each merchant
         HashMap<String,List<String>> similarity_merchants = new HashMap<String, List<String>>();
         int num_similar_merchants = 5;
-        for(int i=0;i<auxilary_data.size();i++){
+        int n_merchant = 4995;
+        for(int i=0;i<n_merchant;i++){
             String [] strs = auxilary_data.get(i).split(",");
             List<String> list =  new ArrayList<String>(num_similar_merchants);
 
@@ -425,6 +468,14 @@ public class FE_Extractor {
 
             similarity_merchants.put(strs[0],list);
         }
+        //load merchant feature
+        HashMap<String,String> merchant_feature = new HashMap<String, String>();
+        for(int i=n_merchant;i<2*n_merchant;i++){
+        	String [] strs = auxilary_data.get(i).split("@");
+        	merchant_feature.put(strs[0], strs[1]);
+        }
+//        System.out.println(merchant_feature.size());
+        
         //extract user feature
         HashMap<String,String> uf_map = extractUserFeature(data_raw_list);
 
@@ -459,6 +510,8 @@ public class FE_Extractor {
                 }else{
                 	d2.features += "," + "u|gender|" + d.gender + ":" + "1";
                 }
+                //add merchant feature
+                d2.features += "," + merchant_feature.get(d.merchant_id);
                 data_list.add(d2);
             }
         }

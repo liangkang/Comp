@@ -56,9 +56,15 @@ public class FE_Extractor {
 //        for(int i=0;i<numBrand;i++)
 //        	map.put("umb|"+i, count+i);
 //        count += numBrand;
+        
 //        for(int i=0;i<numCat;i++)
 //        	map.put("umc|"+i, count+i);
 //        count += numCat;
+        
+        //UB weight
+//        for(int i=0;i<numBrand;i++)
+//        	map.put("umBw|"+i, count+i);
+//        count += numBrand;
         
         //用户有过行为的mid,brand_id,cat_id dummy
 //        for(int i=0;i<numMerchant;i++)
@@ -71,7 +77,7 @@ public class FE_Extractor {
 //        	map.put("u|cid|b|"+i,count+i);
 //        count += numCat;
         //um feature index
-        for(int rank=0;rank<=0;rank++)
+        for(int rank=0;rank<=5;rank++)
             for(int month=5;month<=11;month++)
                 for(int action=0;action<=3;action++)
                 	for(int stat_type=0;stat_type<=5;stat_type++)
@@ -79,7 +85,7 @@ public class FE_Extractor {
                 		map.put(rank+"|"+month+"|"+action+"|"+stat_type,count);
                 		count++;
                 	}
-        for(int rank=0;rank<=0;rank++)
+        for(int rank=0;rank<=5;rank++)
         	for(int action=0;action<=3;action++)
         		for(int stat_type=0;stat_type<=7;stat_type++)
         		{
@@ -87,12 +93,13 @@ public class FE_Extractor {
         			count++;
         		}
         // sim u,merchant feature
-        for(int rank=1;rank<6;rank++)
-            for(int month=5;month<=11;month++)
-                for(int action=0;action<=3;action++) {
-                    map.put(rank+"|"+month+"|"+action,count);
-                    count++;
-                }
+//        for(int rank=1;rank<6;rank++)
+//            for(int month=5;month<=11;month++)
+//                for(int action=0;action<=3;action++) {
+//                    map.put(rank+"|"+month+"|"+action,count);
+//                    count++;
+//                }
+        
         // double11 feature
 //        for(int rank=0;rank<=0;rank++)
 //        	for(int action=0;action<=3;action++)
@@ -113,22 +120,22 @@ public class FE_Extractor {
 //        					count++;
 //        				}
         //log type
-        int [] umalldayLogType = {2,4,5,6,7};
-        int [] ummonthLogType = {2,4,5};
-        for(int rank=0;rank<=0;rank++)
-            for(int month=5;month<=11;month++)
-                for(int action=0;action<=3;action++)
-                	for(int st : ummonthLogType){
-                		map.put(rank+"|"+month+"|"+action+"|"+st+"l",count);
-                		count++;
-                	}
-        for(int rank=0;rank<=0;rank++)
-        	for(int action=0;action<=3;action++)
-        		for(int st : umalldayLogType)
-        		{
-        			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
-        			count++;
-        		}
+//        int [] umalldayLogType = {2,4,5,6,7};
+//        int [] ummonthLogType = {2,4,5};
+//        for(int rank=0;rank<=5;rank++)
+//            for(int month=5;month<=11;month++)
+//                for(int action=0;action<=3;action++)
+//                	for(int st : ummonthLogType){
+//                		map.put(rank+"|"+month+"|"+action+"|"+st+"l",count);
+//                		count++;
+//                	}
+//        for(int rank=0;rank<=5;rank++)
+//        	for(int action=0;action<=3;action++)
+//        		for(int st : umalldayLogType)
+//        		{
+//        			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
+//        			count++;
+//        		}
         
         
         //user feature index
@@ -156,20 +163,20 @@ public class FE_Extractor {
 //        		map.put("u|db11|"+action+"|"+st, count);
 //        		count++;
 //        	}
-        int [] userAlldayLogType = {2,4,6,7,8,11,12,13,15};
-        int [] userMonthLogType = {2,4};
-        for(int month=5;month<=11;month++)
-        	for(int action=0;action<=3;action++)
-        		for(int st : userMonthLogType){
-        			map.put("u"+month+"|"+action+"|"+st+"l",count);
-        			count++;
-        		}
-        for(int action=0;action<=3;action++)
-    		for(int st : userAlldayLogType)
-    		{
-    			map.put("u"+"0"+"|"+action+"|"+st+"l", count);
-    			count++;
-    		}
+//        int [] userAlldayLogType = {2,4,6,7,8,11,12,13,15};
+//        int [] userMonthLogType = {2,4};
+//        for(int month=5;month<=11;month++)
+//        	for(int action=0;action<=3;action++)
+//        		for(int st : userMonthLogType){
+//        			map.put("u"+month+"|"+action+"|"+st+"l",count);
+//        			count++;
+//        		}
+//        for(int action=0;action<=3;action++)
+//    		for(int st : userAlldayLogType)
+//    		{
+//    			map.put("u"+"0"+"|"+action+"|"+st+"l", count);
+//    			count++;
+//    		}
         
         //用户购买可能性feature index
         map.put("u"+"0"+"|"+"0"+"|"+"6", count);
@@ -241,165 +248,17 @@ public class FE_Extractor {
         		count++;
         	}
         
+//        for (int st=18;st<=23;st++){
+//        	map.put("m0|"+st, count);
+//        	count++;
+//        }
+//        map.put("mbn", count);
+//        count++;
         
         return map;
     }
 
-	// dummy coding map
-//	
-//    public static HashMap<String,Integer> mapping()
-//    {
-//        HashMap<String,Integer> map = new HashMap<String, Integer>();
-//        //the dimensions from 0 to 4995 is the indicator of merchant
-//        for(int i=0;i<4995;i++)
-//            map.put(Integer.toString(i+1),i);
-//        int count = numMerchant;
-//        //the dimension starting from 4995 is the behavior on top 5 similar merchants
-//        for(int i=0;i<numBrand;i++)
-//        	map.put("bid|"+i, count+i);
-//        count += numBrand;
-//        for(int i=0;i<numCat;i++)
-//        	map.put("cid|"+i, count+i);
-//        count += numCat;
-//        //um feature index
-//        //um dummy coding
-//        HashMap<Integer,Integer> allDayDummyMap = new HashMap<Integer, Integer>();
-//        allDayDummyMap.put(0, 20);
-//        allDayDummyMap.put(1, 10);
-//        allDayDummyMap.put(3, 5);
-//        HashMap<Integer,Integer> monthDummyMap = new HashMap<Integer, Integer>();
-//        monthDummyMap.put(0, 20);
-//        monthDummyMap.put(1, 10);
-//        monthDummyMap.put(3, 5);
-//        int [] noDummy4month = {2,4,5};
-//        int [] noDummy4allday = {2,4,5,6,7};
-//        for(int rank=0;rank<6;rank++)
-//            for(int month=5;month<=11;month++)
-//                for(int action=0;action<=3;action++){
-//                	for(int st : noDummy4month){
-//                		map.put(rank+"|"+month+"|"+action+"|"+st,count);
-//                		count++;
-//                	}
-//                }
-//        for(int rank=0;rank<6;rank++)
-//            for(int month=5;month<=11;month++)
-//                for(int action=0;action<=3;action++){
-//                	for(Map.Entry<Integer, Integer> entry: monthDummyMap.entrySet()){
-//                		int st = entry.getKey();
-//                		for(int k=1;k<=entry.getValue();k++){
-//                			map.put(rank+"|"+month+"|"+action+"|"+st+"|"+k,count);
-//                			count++;
-//                		}
-//                		
-//                	}
-//                }
-//        for(int rank=0;rank<6;rank++)
-//        	for(int action=0;action<=3;action++)
-//        		for(int st : noDummy4allday)
-//        		{
-//        			map.put(rank+"|"+"0"+"|"+action+"|"+st, count);
-//        			count++;
-//        		}
-//        for(int rank=0;rank<6;rank++)
-//        	for(int action=0;action<=3;action++){
-//        		for(Map.Entry<Integer, Integer> entry: allDayDummyMap.entrySet()){
-//        			int st = entry.getKey();
-//        			for(int k=1;k<=entry.getValue();k++){
-//        				map.put(rank+"|"+"0"+"|"+action+"|"+st+"|"+k,count);
-//        				count++;
-//        			}
-//        		}
-//        	}
-//        
-//        //user feature index
-//        HashMap<Integer,Integer> userAllDayDummyMap = new HashMap<Integer, Integer>();
-//        userAllDayDummyMap.put(0, 50);
-//        userAllDayDummyMap.put(1, 20);
-//        userAllDayDummyMap.put(3, 20);
-//        userAllDayDummyMap.put(5, 10);
-//        userAllDayDummyMap.put(10, 5);
-//        userAllDayDummyMap.put(9, 5);
-//        userAllDayDummyMap.put(14, 5);
-//        HashMap<Integer,Integer> userMonthDummyMap = new HashMap<Integer, Integer>();
-//        userMonthDummyMap.put(0, 50);
-//        userMonthDummyMap.put(1, 10);
-//        userMonthDummyMap.put(3, 10);
-//        int [] userMonthNoDummy = {2,4};
-//        int [] userAlldayNoDummy = {2,4,7,8,11,12,13,15};
-//        for(int month=5;month<=11;month++)
-//        	for(int action=0;action<=3;action++)
-//        		for(int st: userMonthNoDummy){
-//        			map.put("u"+month+"|"+action+"|"+st,count);
-//        			count++;
-//        		}
-//        for(int month=5;month<=11;month++)
-//        	for(int action=0;action<=3;action++){
-//        		for(Map.Entry<Integer, Integer> entry : userMonthDummyMap.entrySet()){
-//        			int st = entry.getKey();
-//        			for(int k=1;k<=entry.getValue();k++){
-//        				map.put("u"+month+"|"+action+"|"+st+"|"+k,count);
-//        				count++;
-//        			}
-//        		}
-//        	}
-//        for(int action=0;action<=3;action++)
-//    		for(int st: userAlldayNoDummy)
-//    		{
-//    			map.put("u"+"0"+"|"+action+"|"+st, count);
-//    			count++;
-//    		}
-//        for(int action=0;action<=3;action++)
-//    		for(Map.Entry<Integer, Integer> entry : userAllDayDummyMap.entrySet())
-//    		{
-//    			int st = entry.getKey();
-//    			for(int k=1;k<=entry.getValue();k++){
-//    				map.put("u"+"0"+"|"+action+"|"+st+"|"+k, count);
-//    				count++;
-//    			}
-//    		}
-//        //用户购买可能性feature index
-//        map.put("u"+"0"+"|"+"0"+"|"+"6", count);
-//		count++;
-//		map.put("u"+"0"+"|"+"1"+"|"+"6", count);
-//		count++;
-//		map.put("u"+"0"+"|"+"3"+"|"+"6", count);
-//		count++;
-//		//用户age&gender index
-//        for (int age=0;age<=8;age++){
-//        	map.put("u|age|"+age, count);
-//        	count++;
-//        }
-//        for (int gender=0;gender<=2;gender++){
-//        	map.put("u|gender|"+gender, count);
-//        	count++;
-//        }
-//        //merchant特征
-////        for (int action=0;action<=3;action++)
-////        	for(int stat_type=0;stat_type<=6;stat_type++){
-////        		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
-////        		count++;
-////        	}
-////        map.put("m"+"0"+"|"+"7", count);
-////        count++;
-////        map.put("m"+"0"+"|"+"8", count);
-////        count++;
-////        for (int month=5;month<=11;month++)
-////        	for (int action=0;action<=3;action++)
-////        		for (int stat_type=0;stat_type<=5;stat_type++){
-////        			map.put("m"+month+"|"+action+"|"+stat_type, count);
-////        			count++;
-////        		}
-////        map.put("m"+"0"+"|"+"0|"+"9", count);
-////        count++;
-////        map.put("m"+"0"+"|"+"1|"+"9", count);
-////        count++;
-////        map.put("m"+"0"+"|"+"3|"+"9", count);
-////        count++;
-//        
-//        
-//        return map;
-//    }
-//    
+ 
     
     public static String dummyCoding4Count(int x, String key, int minL, int maxR) {
 		String feat = "";
@@ -409,395 +268,6 @@ public class FE_Extractor {
 		}
 		return feat;
 	}
-    
-    //um feature dummy coding
-    public static String activity_log2feature4dummy(int rank,String merchant_id, String activitiy_log, HashMap<String,String> brandid2inx, HashMap<String,String> catid2inx){
-        String feature="";
-        String [] strs = activitiy_log.split("#");
-        Date last_day = new Date(2014,11,12);
-        // month|act: act count
-        HashMap<String,Integer> map = new HashMap<String, Integer>();
-        // month|act: day set
-        HashMap<String,HashSet<Integer>> map_d = new HashMap<String, HashSet<Integer>>();
-        // month|act: item set
-        HashMap<String,HashSet<String>> map_i = new HashMap<String, HashSet<String>>();
-        // ALLtime|act: act count
-        HashMap<String,Integer> map_all_c = new HashMap<String, Integer>();
-        // ALLtime|act: act date
-        HashMap<String,HashSet<Date>> map_all_dat = new HashMap<String, HashSet<Date>>();
-        // ALLtime|act: item set
-        HashMap<String,HashSet<String>> map_all_i = new HashMap<String, HashSet<String>>();
-        for(int i=0;i<strs.length;i++){
-            String []strs2 = strs[i].split(":");
-            if(strs2.length==5) {
-                int month = Integer.parseInt(strs2[3].substring(0, 2));
-                int day = Integer.parseInt(strs2[3].substring(2,4));
-                String brand = strs2[2];
-                String cat = strs2[1];
-                if(strs2[4].equals("2")){
-                	feature += "bid"+"|"+brandid2inx.get(brand)+":"+1+",";
-                	feature += "cid"+"|"+catid2inx.get(cat)+":"+1+",";
-                }
-                if (month==11&&day>11)
-                	day = 11;
-                String item = strs2[0];
-                // 统计每个月|行为 数量
-                if (map.containsKey(month + "|" + strs2[4])) {
-                    map.put(month + "|" + strs2[4], map.get(month + "|" + strs2[4]) + 1);
-                } else {
-                    map.put(month + "|" + strs2[4], 1);
-                }
-                // 统计每个月|行为 天set
-                if (map_d.containsKey(month + "|" +strs2[4])){
-                	HashSet<Integer> set_d = map_d.get(month + "|" +strs2[4]);
-                	set_d.add(day);
-                	map_d.put(month + "|" +strs2[4], set_d);
-                } else{
-                	HashSet<Integer> set_d = new HashSet<Integer>();
-                	set_d.add(day);
-                	map_d.put(month + "|" +strs2[4], set_d);
-                }
-                // 统计每个月|行为 产品set
-                if (map_i.containsKey(month + "|" + strs2[4])){
-                	HashSet<String> set_i = map_i.get(month + "|" +strs2[4]);
-                	set_i.add(item);
-                	map_i.put(month + "|" + strs2[4], set_i);
-                } else{
-                	HashSet<String> set_i = new HashSet<String>();
-                	set_i.add(item);
-                	map_i.put(month + "|" + strs2[4], set_i);
-                }
-                // 统计整个时间段|行为 数量
-                if (map_all_c.containsKey("0" + "|" + strs2[4])) {
-                	map_all_c.put("0" + "|" + strs2[4], map_all_c.get("0" + "|" + strs2[4]) + 1);
-                } else {
-                	map_all_c.put("0" + "|" + strs2[4], 1);
-                }
-                // 统计整个时间段|行为 产品set
-                if (map_all_i.containsKey("0" + "|" + strs2[4])){
-                	HashSet<String> set_i = map_all_i.get("0" + "|" +strs2[4]);
-                	set_i.add(item);
-                	map_all_i.put("0" + "|" + strs2[4], set_i);
-                } else{
-                	HashSet<String> set_i = new HashSet<String>();
-                	set_i.add(item);
-                	map_all_i.put("0" + "|" + strs2[4], set_i);
-                }
-                // 统计整个时间段|行为 date
-                if (map_all_dat.containsKey("0" + "|" + strs2[4])){
-                	HashSet<Date> set_dat = map_all_dat.get("0" + "|" + strs2[4]);
-                	Date dat = new Date(2014,month,day);
-                	set_dat.add(dat);
-                	map_all_dat.put("0" + "|" +strs2[4],set_dat);
-                } else{
-                	HashSet<Date> set_dat = new HashSet<Date>();
-                	Date dat = new Date(2014,month,day);
-                	set_dat.add(dat);
-                	map_all_dat.put("0" + "|" +strs2[4],set_dat);
-                }
-            }
-        }
-        for(Map.Entry<String,Integer> entry: map_all_c.entrySet()){
-        	// 整个时间段行为数dummy coding 1-20
-//            feature += rank+"|"+entry.getKey()+"|0"+":"+Math.log((double)entry.getValue()+1)+",";
-            feature += dummyCoding4Count(entry.getValue(), rank+"|"+entry.getKey()+"|0|", 1, 20);
-        }
-        for(Map.Entry<String,HashSet<Date>> entry: map_all_dat.entrySet()){
-        	// 整个时间段行为天数dummy coding 1-10
-//            feature += rank+"|"+entry.getKey()+"|1"+":"+Math.log((double)entry.getValue().size()+1)+",";
-            feature += dummyCoding4Count(entry.getValue().size(), rank+"|"+entry.getKey()+"|1|", 1, 10);
-            // 整个时间段行为数/行为天数
-            feature += rank+"|"+entry.getKey()+"|2"+":"+map_all_c.get(entry.getKey())/(double)entry.getValue().size()+",";
-        }
-        for(Map.Entry<String, HashSet<String>> entry: map_all_i.entrySet()){
-        	// 整个时间段行为产品数dummy coding 1-5
-//        	feature += rank+"|"+entry.getKey()+"|3"+":"+Math.log((double)entry.getValue().size()+1)+",";
-        	feature += dummyCoding4Count(entry.getValue().size(), rank+"|"+entry.getKey()+"|3|", 1, 5);
-        	// 整个时间段行为产品数/行为数
-        	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map_all_c.get(entry.getKey())+",";
-        }
-        for(Map.Entry<String, HashSet<Date>> entry: map_all_dat.entrySet()){
-        	// 整个时间段最近行为时间差倒数
-        	feature += rank+"|"+entry.getKey()+"|5"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
-        	// 整个时间段最远行为时间差倒数
-        	feature += rank+"|"+entry.getKey()+"|6"+":"+1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+",";
-        	// 整个时间段第一次行为与最后一次行为的时间差
-        	if(entry.getValue().size()>1)
-        		feature += rank+"|"+entry.getKey() + "|7" + ":" +(double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+",";
-        }
-        for(Map.Entry<String,Integer> entry: map.entrySet()){
-        	// 每个月行为数dummy coding 1-20
-//            feature += rank+"|"+entry.getKey()+"|0"+":"+Math.log((double)entry.getValue()+1)+",";
-            feature += dummyCoding4Count(entry.getValue(), rank+"|"+entry.getKey()+"|0|", 1, 20);
-            // 行为数占比
-            String [] strsk = entry.getKey().split("\\|");
-            feature += rank+"|"+entry.getKey()+"|5"+":"+(double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+",";
-        }
-        for(Map.Entry<String,HashSet<Integer>> entry: map_d.entrySet()){
-        	// 每个月行为天数dummy coding 1-10
-//            feature += rank+"|"+entry.getKey()+"|1"+":"+Math.log((double)entry.getValue().size()+1)+",";
-        	feature += dummyCoding4Count(entry.getValue().size(), rank+"|"+entry.getKey()+"|1|", 1, 10);
-            // 行为数/行为天数
-            feature += rank+"|"+entry.getKey()+"|2"+":"+map.get(entry.getKey())/(double)entry.getValue().size()+",";
-        }
-        for(Map.Entry<String, HashSet<String>> entry: map_i.entrySet()){
-        	// 每个月行为产品数dummy coding 1-5
-//        	feature += rank+"|"+entry.getKey()+"|3"+":"+Math.log((double)entry.getValue().size()+1)+",";
-        	feature += dummyCoding4Count(entry.getValue().size(), rank+"|"+entry.getKey()+"|3|", 1, 5);
-        	// 行为产品数/行为数
-        	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map.get(entry.getKey())+",";
-        }
-        
-        feature += merchant_id+":"+"1";
-        return feature;
-    }
-    
-    // user feature extraction and dummy coding
-    public static HashMap<String,String> extractUserFeature4dummy(List<FE_Data_Raw> data_raw_list) {
-		int num = data_raw_list.size();
-		Date last_day = new Date(2014,11,12);
-		HashMap<String,userStat> map_user = new HashMap<String, userStat>();
-		HashMap<String,String> user_feature_map = new HashMap<String, String>();
-		FE_Data_Raw d;
-		userStat us;
-		for(int i=0;i<num;i++){
-			d = data_raw_list.get(i);
-			if (map_user.containsKey(d.user_id)){
-				us = map_user.get(d.user_id);
-			} else{
-				us = new userStat(d.user_id);
-				us.map_all_c = new HashMap<String, Integer>();
-				us.map_all_d = new HashMap<String, HashSet<Date>>();
-				us.map_all_m = new HashMap<String, HashSet<String>>();
-				us.map_u_c = new HashMap<String, Integer>();
-				us.map_u_d = new HashMap<String, HashSet<Integer>>();
-				us.map_u_m = new HashMap<String, HashSet<String>>();
-				us.map_all_m2 = new HashMap<String, HashSet<String>>();
-				us.map_all_m3 = new HashMap<String, HashSet<String>>();
-				
-				//map_user.put(d.user_id, us);
-			}
-			String [] strs = d.activity_log.split("#");
-			for(int k=0;k<strs.length;k++){
-	            String []strs2 = strs[k].split(":");
-	            if (strs2.length==5){
-	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
-	                int day = Integer.parseInt(strs2[3].substring(2,4));
-	                if (month==11&&day>11)
-	                	day = 11;
-	                //String item = strs2[0];
-	                // 用户整个时间段|行为 计数
-	                if(us.map_all_c.containsKey("0"+"|"+strs2[4])){
-	                	us.map_all_c.put("0"+"|"+strs2[4], us.map_all_c.get("0"+"|"+strs2[4])+1);
-	                } else{
-	                	us.map_all_c.put("0"+"|"+strs2[4], 1);
-	                }
-	                // 用户整个时间段|行为 merchant set
-	                if(us.map_all_m.containsKey("0"+"|"+strs2[4])){
-	                	HashSet<String> set_m = us.map_all_m.get("0"+"|"+strs2[4]);
-	                	set_m.add(d.merchant_id);
-	                	us.map_all_m.put("0"+"|"+strs2[4], set_m);
-	                } else{
-	                	HashSet<String> set_m = new HashSet<String>();
-	                	set_m.add(d.merchant_id);
-	                	us.map_all_m.put("0"+"|"+strs2[4], set_m);
-	                }
-	                // 用户整个时间段|行为 merchant+month+day
-	                if(us.map_all_m2.containsKey("0"+"|"+strs2[4])){
-	                	HashSet<String> set_m2 = us.map_all_m2.get("0"+"|"+strs2[4]);
-	                	set_m2.add(month+day+","+d.merchant_id);
-	                	us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
-	                } else{
-	                	HashSet<String> set_m2 = new HashSet<String>();
-	                	set_m2.add(month+day+","+d.merchant_id);
-	                	us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
-	                }
-	                // 用户整个时间段|行为 merchant+month
-	                if(us.map_all_m3.containsKey("0"+"|"+strs2[4])){
-	                	HashSet<String> set_m3 = us.map_all_m3.get("0"+"|"+strs2[4]);
-	                	set_m3.add(month+","+d.merchant_id);
-	                	us.map_all_m3.put("0"+"|"+strs2[4], set_m3);
-	                } else{
-	                	HashSet<String> set_m3 = new HashSet<String>();
-	                	set_m3.add(month+","+d.merchant_id);
-	                	us.map_all_m3.put("0"+"|"+strs2[4], set_m3);
-	                }
-	                // 用户整个时间段|行为 date set
-	                if(us.map_all_d.containsKey("0"+"|"+strs2[4])){
-	                	HashSet<Date> set_d = us.map_all_d.get("0"+"|"+strs2[4]);
-	                	set_d.add(new Date(2014,month,day));
-	                	us.map_all_d.put("0"+"|"+strs2[4], set_d);
-	                } else{
-	                	HashSet<Date> set_d = new HashSet<Date>();
-	                	set_d.add(new Date(2014,month,day));
-	                	us.map_all_d.put("0"+"|"+strs2[4], set_d);
-	                }
-	                // 用户每个月|行为 计数
-	                if(us.map_u_c.containsKey(month+"|"+strs2[4])){
-	                	us.map_u_c.put(month+"|"+strs2[4], us.map_u_c.get(month+"|"+strs2[4])+1);
-	                } else{
-	                	us.map_u_c.put(month+"|"+strs2[4], 1);
-	                }
-	                // 用户每个月|行为 merchant set
-	                if(us.map_u_m.containsKey(month+"|"+strs2[4])){
-	                	HashSet<String> set_m = us.map_u_m.get(month+"|"+strs2[4]);
-	                	set_m.add(d.merchant_id);
-	                	us.map_u_m.put(month+"|"+strs2[4], set_m);
-	                } else{
-	                	HashSet<String> set_m = new HashSet<String>();
-	                	set_m.add(d.merchant_id);
-	                	us.map_u_m.put(month+"|"+strs2[4], set_m);
-	                }
-	                // 用户每个月|行为 date set
-	                if(us.map_u_d.containsKey(month+"|"+strs2[4])){
-	                	HashSet<Integer> set_d = us.map_u_d.get(month+"|"+strs2[4]);
-	                	set_d.add(day);
-	                	us.map_u_d.put(month+"|"+strs2[4], set_d);
-	                } else{
-	                	HashSet<Integer> set_d = new HashSet<Integer>();
-	                	set_d.add(day);
-	                	us.map_u_d.put(month+"|"+strs2[4], set_d);
-	                }
-	            }
-			}
-			map_user.put(d.user_id, us);
-		}
-		
-		String user;
-		userStat us1;
-		String feature;
-		
-		for(Map.Entry<String, userStat> entry: map_user.entrySet()){
-			user = entry.getKey();
-			us1 = entry.getValue();
-			feature = "";
-			for(Map.Entry<String,Integer> entry2: us1.map_all_c.entrySet()){
-	        	// 整个时间段行为数dummy coding 1-50
-//	            feature += "u"+entry2.getKey()+"|0"+":"+Math.log((double)entry2.getValue()+1)+",";
-	            feature += dummyCoding4Count(entry2.getValue(), "u"+entry2.getKey()+"|0|", 1, 50);
-	            // 购买可能性：购买数/行为数
-	            String [] strsk = entry2.getKey().split("\\|");
-	            if (!strsk[1].equals("2")&&us1.map_all_c.containsKey("0|2")){
-	            	feature += "u"+entry2.getKey()+"|6"+":"+(double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+",";
-	            }
-	        }
-			for(Map.Entry<String,HashSet<Date>> entry2: us1.map_all_d.entrySet()){
-	        	// 整个时间段行为天数dummy coding 1-20
-//	            feature += "u"+entry2.getKey()+"|1"+":"+Math.log((double)entry2.getValue().size()+1)+",";
-	            feature += dummyCoding4Count(entry2.getValue().size(), "u"+entry2.getKey()+"|1|", 1, 20);
-	            // 整个时间段行为数/行为天数
-	            feature += "u"+entry2.getKey()+"|2"+":"+us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
-	            // 整个时间段最近时间差倒数
-	            feature += "u"+entry2.getKey()+"|4"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
-	            // 整个时间段最远时间差倒数
-	            feature += "u"+entry2.getKey()+"|8"+":"+1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
-	            // 整个时间段最近-最远时间差
-	            //feature += "u"+entry2.getKey()+"|9"+":"+1/(double)(Collections.max(entry2.getValue()).getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
-	        }
-			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m.entrySet()){
-	        	// 整个时间段行为m数dummy coding 1-20
-//	            feature += "u"+entry2.getKey()+"|3"+":"+Math.log((double)entry2.getValue().size()+1)+",";
-	            feature += dummyCoding4Count(entry2.getValue().size(), "u"+entry2.getKey()+"|3|", 1, 20);
-	            // 整个时间段行为m数/行为数
-	            feature += "u"+entry2.getKey()+"|7"+":"+(double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+",";
-	        }
-			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m2.entrySet()){
-	        	// 整个时间段行为天数>=x m数dummy coding 1-10,1-5
-//	            feature += "u"+entry2.getKey()+"|5"+":"+Math.log((double)entry2.getValue().size()+1)+",";
-				HashMap<String,Integer> mcount = new HashMap<String, Integer>();
-				for(String str : entry2.getValue()){
-					String [] str2 = str.split(",");
-					if(mcount.containsKey(str2[1])){
-						mcount.put(str2[1], mcount.get(str2[1])+1);
-					}else{
-						mcount.put(str2[1],1);
-					}
-				}
-				int c2 = 0;
-				int c5 = 0;
-				for(Map.Entry<String, Integer> entry3: mcount.entrySet()){
-					if(entry3.getValue()>1)
-						c2++;
-					if(entry3.getValue()>4)
-						c5++;
-				}
-				if(c2>0){
-//					feature += "u"+entry2.getKey()+"|5"+":"+c2+",";
-					feature += dummyCoding4Count(c2, "u"+entry2.getKey()+"|5|", 1, 10);
-					//整个时间段行为天数大于1的m占比
-					feature += "u"+entry2.getKey()+"|11"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
-				}
-				if(c5>0){
-					feature += dummyCoding4Count(c5, "u"+entry2.getKey()+"|10|", 1, 5);
-//					feature += "u"+entry2.getKey()+"|10"+":"+c5+",";
-					//整个时间段行为天数大于4的m占比
-					feature += "u"+entry2.getKey()+"|12"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
-				}
-	        }
-			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m3.entrySet()){
-	        	// 整个时间段行为月数>=2 m数dummy coding 1-5 
-//	            feature += "u"+entry2.getKey()+"|5"+":"+Math.log((double)entry2.getValue().size()+1)+",";
-				HashMap<String,Integer> mcount = new HashMap<String, Integer>();
-				for(String str : entry2.getValue()){
-					String [] str2 = str.split(",");
-					if(mcount.containsKey(str2[1])){
-						mcount.put(str2[1], mcount.get(str2[1])+1);
-					}else{
-						mcount.put(str2[1],1);
-					}
-				}
-				int c2 = 0;
-				int c3 = 0;
-				for(Map.Entry<String, Integer> entry3: mcount.entrySet()){
-					if(entry3.getValue()>1)
-						c2++;
-					if(entry3.getValue()>1)
-						c3++;
-				}
-				if(c2>0){
-//					feature += "u"+entry2.getKey()+"|9"+":"+c2+",";
-					feature += dummyCoding4Count(c2, "u"+entry2.getKey()+"|9|", 1, 5);
-					//整个时间段行为月数大于2的m占比
-					feature += "u"+entry2.getKey()+"|13"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
-				}
-				if(c3>0){
-//					feature += "u"+entry2.getKey()+"|14"+":"+c3+",";
-					feature += dummyCoding4Count(c3, "u"+entry2.getKey()+"|14|", 1, 5);
-					//整个时间段行为月数大于3的m占比
-					feature += "u"+entry2.getKey()+"|15"+":"+c3/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
-				}
-	        }
-			for(Map.Entry<String,Integer> entry2: us1.map_u_c.entrySet()){
-				// 每个月行为数dummy coding1-50
-//				feature += "u"+entry2.getKey()+"|0"+":"+Math.log((double)entry2.getValue()+1)+",";
-				feature += dummyCoding4Count(entry2.getValue(), "u"+entry2.getKey()+"|0|", 1, 50);
-				// 每个月行为数占比
-				String [] strsk = entry2.getKey().split("\\|");
-				feature += "u"+entry2.getKey()+"|4"+":"+(double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+",";
-			}
-			for(Map.Entry<String, HashSet<Integer>> entry2: us1.map_u_d.entrySet()){
-				// 每个月行为天数dummy coding1-10
-//				feature += "u"+entry2.getKey()+"|1"+":"+Math.log((double)entry2.getValue().size()+1)+",";
-				feature += dummyCoding4Count(entry2.getValue().size(), "u"+entry2.getKey()+"|1|", 1, 10);
-				// 每个月行为数/行为天数
-				feature += "u"+entry2.getKey()+"|2"+":"+us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
-			}
-			for(Map.Entry<String,HashSet<String>> entry2: us1.map_u_m.entrySet()){
-	        	// 每个月行为m数dummy coding1-10
-//	            feature += "u"+entry2.getKey()+"|3"+":"+Math.log((double)entry2.getValue().size()+1)+",";
-	            feature += dummyCoding4Count(entry2.getValue().size(), "u"+entry2.getKey()+"|3|", 1, 10);
-	        }
-			
-			if(feature!=null&&!feature.equals("")){
-				//System.out.println(feature.length());
-				feature = feature.substring(0,feature.length()-1);
-			}
-			
-			user_feature_map.put(user,feature);
-		}
-		return user_feature_map;
-	}
-    
     
 
     // um特征提取
@@ -838,13 +308,13 @@ public class FE_Extractor {
                 	day = 11;
                 String item = strs2[0];
                 // 双11当天|行为 数量
-//                if (month==11&&day==11){
-//                	if (map_db_c.containsKey("db11|"+strs2[4])){
-//                		map_db_c.put("db11|"+strs2[4], map_db_c.get("db11|"+strs2[4])+1);
-//                	} else{
-//                		map_db_c.put("db11|"+strs2[4], 1);
-//                	}
-//                }
+                if (month==11&&day==11){
+                	if (map_db_c.containsKey("db11|"+strs2[4])){
+                		map_db_c.put("db11|"+strs2[4], map_db_c.get("db11|"+strs2[4])+1);
+                	} else{
+                		map_db_c.put("db11|"+strs2[4], 1);
+                	}
+                }
                 // 统计每个月|行为 数量
                 if (map.containsKey(month + "|" + strs2[4])) {
                     map.put(month + "|" + strs2[4], map.get(month + "|" + strs2[4]) + 1);
@@ -917,7 +387,7 @@ public class FE_Extractor {
             // *age*gender
 //            feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|2"+":"+map_all_c.get(entry.getKey())/(double)entry.getValue().size()+",";
             // 整个时间段行为数/行为天数log
-            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map_all_c.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
+//            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map_all_c.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
         }
         for(Map.Entry<String, HashSet<String>> entry: map_all_i.entrySet()){
         	// 整个时间段行为产品数
@@ -929,7 +399,7 @@ public class FE_Extractor {
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map_all_c.get(entry.getKey())+",";
         	// 整个时间段行为产品数/行为数log
-        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map_all_c.get(entry.getKey())+1)+",";
+//        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map_all_c.get(entry.getKey())+1)+",";
         }
         for(Map.Entry<String, HashSet<Date>> entry: map_all_dat.entrySet()){
         	// 整个时间段最近行为时间差倒数
@@ -937,18 +407,18 @@ public class FE_Extractor {
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|5"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
         	// 整个时间段最近行为时间差倒数log
-        	feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+1)+",";
+//        	feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+1)+",";
         	// 整个时间段最远行为时间差倒数
         	feature += rank+"|"+entry.getKey()+"|6"+":"+1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+",";
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|6"+":"+1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+",";
         	// 整个时间段最远行为时间差倒数log
-        	feature += rank+"|"+entry.getKey()+"|6l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+1)+",";
+//        	feature += rank+"|"+entry.getKey()+"|6l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+1)+",";
         	// 整个时间段第一次行为与最后一次行为的时间差
         	if(entry.getValue().size()>1){
         		feature += rank+"|"+entry.getKey() + "|7" + ":" +(double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+",";
         		// 整个时间段第一次行为与最后一次行为的时间差log
-        		feature += rank+"|"+entry.getKey() + "|7l" + ":" +Math.log((double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+1)+",";
+//        		feature += rank+"|"+entry.getKey() + "|7l" + ":" +Math.log((double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+1)+",";
         	}
         }
 //        for(Map.Entry<String, Integer> entry: map_db_c.entrySet()){
@@ -961,29 +431,31 @@ public class FE_Extractor {
 //        	}
 //        }
         for(Map.Entry<String,Integer> entry: map.entrySet()){
-        	// 行为数
+        	// 每个月行为数
             feature += rank+"|"+entry.getKey()+"|0"+":"+Math.log((double)entry.getValue()+1)+",";
-            // 行为数占比
+            // 每个月行为数占比
             String [] strsk = entry.getKey().split("\\|");
             feature += rank+"|"+entry.getKey()+"|5"+":"+(double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+",";
-            // 行为数占比log
-            feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log((double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+1)+",";
+            // 每个月行为数占比log
+//            feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log((double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+1)+",";
+            // 615 11月点击/加购/收藏 / 双十一购买
+         
         }
         for(Map.Entry<String,HashSet<Integer>> entry: map_d.entrySet()){
-        	// 行为天数
+        	// 每个月行为天数
             feature += rank+"|"+entry.getKey()+"|1"+":"+Math.log((double)entry.getValue().size()+1)+",";
-            // 行为数/行为天数
+            // 每个月行为数/行为天数
             feature += rank+"|"+entry.getKey()+"|2"+":"+map.get(entry.getKey())/(double)entry.getValue().size()+",";
-            // 行为数/行为天数log
-            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
+            // 每个月行为数/行为天数log
+//            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
         }
         for(Map.Entry<String, HashSet<String>> entry: map_i.entrySet()){
-        	// 行为产品数
+        	// 每个月行为产品数
         	feature += rank+"|"+entry.getKey()+"|3"+":"+Math.log((double)entry.getValue().size()+1)+",";
-        	// 行为产品数/行为数
+        	// 每个月行为产品数/行为数
         	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map.get(entry.getKey())+",";
-        	// 行为产品数/行为数log
-        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map.get(entry.getKey())+1)+",";
+        	// 每个月行为产品数/行为数log
+//        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map.get(entry.getKey())+1)+",";
         }
         
         feature += merchant_id+":"+"1";
@@ -1060,17 +532,6 @@ public class FE_Extractor {
 	                // 用户整个时间段|行为 merchant set
 	                if(us.map_all_m.containsKey("0"+"|"+strs2[4])){
 	                	HashSet<String> set_m = us.map_all_m.get("0"+"|"+strs2[4]);
-//	                	if(set_m.contains(d.merchant_id)){
-//	                		if(us.map_all_m2.containsKey("0"+"|"+strs2[4])){
-//	                			HashSet<String> set_m2 = us.map_all_m2.get("0"+"|"+strs2[4]);
-//	                			set_m2.add(d.merchant_id);
-//	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
-//	                		}else{
-//	                			HashSet<String> set_m2 = new HashSet<String>();
-//	                			set_m2.add(d.merchant_id);
-//	                			us.map_all_m2.put("0"+"|"+strs2[4], set_m2);
-//	                		}
-//	                	}
 	                	set_m.add(d.merchant_id);
 	                	us.map_all_m.put("0"+"|"+strs2[4], set_m);
 	                } else{
@@ -1171,7 +632,7 @@ public class FE_Extractor {
 	            	// *age*gender
 //	            	feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|6"+":"+(double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+",";
 	            	// 购买可能性：购买数/行为数log
-	            	feature += "u"+entry2.getKey()+"|6l"+":"+Math.log((double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+1)+",";
+//	            	feature += "u"+entry2.getKey()+"|6l"+":"+Math.log((double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+1)+",";
 	            }
 	        }
 			for(Map.Entry<String,HashSet<Date>> entry2: us1.map_all_d.entrySet()){
@@ -1184,19 +645,19 @@ public class FE_Extractor {
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|2"+":"+us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
 	            // 整个时间段行为数/行为天数log
-	            feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
+//	            feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
 	            // 整个时间段最近时间差倒数
 	            feature += "u"+entry2.getKey()+"|4"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|4"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
 	            // 整个时间段最近时间差倒数log
-	            feature += "u"+entry2.getKey()+"|4l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+1)+",";
+//	            feature += "u"+entry2.getKey()+"|4l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+1)+",";
 	            // 整个时间段最远时间差倒数
 	            feature += "u"+entry2.getKey()+"|8"+":"+1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|8"+":"+1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	            // 整个时间段最远时间差倒数log
-	            feature += "u"+entry2.getKey()+"|8l"+":"+Math.log(1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+1)+",";
+//	            feature += "u"+entry2.getKey()+"|8l"+":"+Math.log(1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+1)+",";
 	            // 整个时间段最近-最远时间差
 	            //feature += "u"+entry2.getKey()+"|9"+":"+1/(double)(Collections.max(entry2.getValue()).getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	        }
@@ -1216,7 +677,7 @@ public class FE_Extractor {
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|7"+":"+(double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+",";
 	            // 整个时间段行为m数/行为数log
-	            feature += "u"+entry2.getKey()+"|7l"+":"+Math.log((double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+1)+",";
+//	            feature += "u"+entry2.getKey()+"|7l"+":"+Math.log((double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+1)+",";
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m2.entrySet()){
 	        	// 整个时间段行为天数>=2 m数
@@ -1247,7 +708,7 @@ public class FE_Extractor {
 					// *age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|11"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为天数大于1的m占比log
-					feature += "u"+entry2.getKey()+"|11l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+//					feature += "u"+entry2.getKey()+"|11l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 				if(c5>0){
 					feature += "u"+entry2.getKey()+"|10"+":"+Math.log(c5+1)+",";
@@ -1258,7 +719,7 @@ public class FE_Extractor {
 					// *age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|12"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为天数大于4的m占比log
-					feature += "u"+entry2.getKey()+"|12l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+//					feature += "u"+entry2.getKey()+"|12l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m3.entrySet()){
@@ -1290,7 +751,7 @@ public class FE_Extractor {
 					//*age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|13"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为月数大于2的m占比log
-					feature += "u"+entry2.getKey()+"|13l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+//					feature += "u"+entry2.getKey()+"|13l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 				if(c3>0){
 					feature += "u"+entry2.getKey()+"|14"+":"+Math.log(c3+1)+",";
@@ -1301,7 +762,7 @@ public class FE_Extractor {
 					//*age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|15"+":"+c3/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为月数大于3的m占比log
-					feature += "u"+entry2.getKey()+"|15l"+":"+Math.log(c3/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+//					feature += "u"+entry2.getKey()+"|15l"+":"+Math.log(c3/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 	        }
 //			for(Map.Entry<String,Integer> entry2: us1.map_db_c.entrySet()){
@@ -1318,7 +779,7 @@ public class FE_Extractor {
 				String [] strsk = entry2.getKey().split("\\|");
 				feature += "u"+entry2.getKey()+"|4"+":"+(double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+",";
 				// 每个月行为数占比log
-				feature += "u"+entry2.getKey()+"|4l"+":"+Math.log((double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+1)+",";
+//				feature += "u"+entry2.getKey()+"|4l"+":"+Math.log((double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+1)+",";
 			}
 			for(Map.Entry<String, HashSet<Integer>> entry2: us1.map_u_d.entrySet()){
 				// 每个月行为天数
@@ -1326,7 +787,7 @@ public class FE_Extractor {
 				// 每个月行为数/行为天数
 				feature += "u"+entry2.getKey()+"|2"+":"+us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
 				// 每个月行为数/行为天数log
-				feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
+//				feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
 			}
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_u_m.entrySet()){
 	        	// 每个月行为m数
@@ -1364,6 +825,7 @@ public class FE_Extractor {
         feature += merchant_id+":"+"1";
         return feature;
     }
+    
     //Stat cat of user buy
     public static HashMap<String,HashSet<String>> statUserBuyCat(List<FE_Data_Raw> data_raw_list, HashMap<String,String> catid2inx) {
     	HashMap<String,HashSet<String>> user_cat = new HashMap<String, HashSet<String>>();
@@ -1436,7 +898,7 @@ public class FE_Extractor {
     			user_brand2.put(d.user_id, brand_set2);
     		}
     		HashSet<String> brand_set = user_brand.get(d.user_id);
-    		HashSet<String> brand_set2 = user_brand.get(d.user_id);
+    		HashSet<String> brand_set2 = user_brand2.get(d.user_id);
     		for(int k=0;k<strs.length;k++){
     			String []strs2 = strs[k].split(":");
     			
@@ -1491,39 +953,96 @@ public class FE_Extractor {
 		union.addAll(user_brand.get(user));
 		union.retainAll(merchant_brand.get(merchant));
 		for(String brand : union){
-			feature += "umb|" + brand +":"+"1" + ",";
+			feature += "umb|" + brand +":"+ "1" + ",";
+		}
+		if(!feature.equals(""))
+			feature = feature.substring(0,feature.length()-1);
+		return feature;
+	}
+    //user buy brand & merchant's brand
+    public static String ubrandUmbrand(String user, String merchant, HashMap<String,HashSet<String>> user_brand,HashMap<String,HashSet<String>> merchant_brand,HashMap<String,HashMap<String,Double>> ub_weight_map) {
+		String feature = "";
+		HashSet<String> union = new HashSet<String>();
+		union.addAll(user_brand.get(user));
+		union.retainAll(merchant_brand.get(merchant));
+		HashMap<String,Double> bw = ub_weight_map.get(user);
+		for(String brand : union){
+			feature += "umb|" + brand +":"+ bw.get(brand) + ",";
 		}
 		if(!feature.equals(""))
 			feature = feature.substring(0,feature.length()-1);
 		return feature;
 	}
     
-    //使用概率填充age,gender
-    public static String fillNullAge() {
-		String age = null;
-		double [] prob = {7.29396819e-05,   1.60756020e-01,   5.00089655e-01,
-		         7.43194576e-01,   8.67122134e-01,   9.74902671e-01,
-		         9.96152432e-01,   1.00000000};
-		double rand = Math.random();
-		for(int i=0;i<8;i++){
-			if(rand<=prob[i]){
-				age = String.valueOf(i+1);
-				break;
-			}
-		}
-		return age;
+    //UB weight
+    public static HashMap<String,HashMap<String,Double>> statUBweight(List<FE_Data_Raw> data_raw_list, HashMap<String,String> brandid2inx) {
+		HashMap<String,HashMap<String,Double>> ub_weight_map = new HashMap<String, HashMap<String,Double>>();
+		int num = data_raw_list.size();
+    	FE_Data_Raw d;
+    	Date firstDate = new Date(2014,5,11);
+    	for(int i=0;i<num;i++){
+    		d = data_raw_list.get(i);
+    		String [] strs = d.activity_log.split("#");
+    		if(!ub_weight_map.containsKey(d.user_id)){
+    			HashMap<String, Double> bw = new HashMap<String, Double>();
+    			ub_weight_map.put(d.user_id, bw);
+    		}
+    		HashMap<String, Double> bw = ub_weight_map.get(d.user_id);
+    		for(int k=0;k<strs.length;k++){
+    			String []strs2 = strs[k].split(":");
+    			if(strs2.length==5){
+    				int month = Integer.parseInt(strs2[3].substring(0, 2));
+    				int day = Integer.parseInt(strs2[3].substring(2,4));
+    				if (month==11&&day>11)
+    					day = 11;
+    				Date dat = new Date(2014,month,day);
+    				int beh_w;
+    				if(strs2[4].equals("0"))
+    					beh_w = 1;
+    				else if(strs2[4].equals("1")||strs2[4].equals("3"))
+    					beh_w = 5;
+    				else
+    					beh_w = 10;
+    				int time_w = (int)(dat.getTime()/86400000 - firstDate.getTime()/86400000)/7+1;
+    				String bid = brandid2inx.get(strs2[2]);
+    				if(bw.containsKey(bid)){
+    					bw.put(bid, bw.get(bid)+(double)beh_w*time_w);
+    				}else{
+    					bw.put(bid, (double)beh_w*time_w);
+    				}
+    			}
+    		}
+    	}
+    	for(Map.Entry<String, HashMap<String,Double>> entry : ub_weight_map.entrySet()){
+    		String user = entry.getKey();
+    		HashMap<String,Double> bw = entry.getValue();
+    		for(Map.Entry<String, Double> entry2 : entry.getValue().entrySet()){
+    			String bid = entry2.getKey();
+    			bw.put(bid, Math.log(entry2.getValue()));
+    		}
+    		ub_weight_map.put(user, bw);
+    	}
+		return ub_weight_map;
 	}
-    public static String fillNullGender() {
-		String gender = null;
-		double [] prob = {0.70128257, 1.00000000};
-		double rand = Math.random();
-		for(int i=0;i<2;i++){
-			if(rand<=prob[i]){
-				gender = String.valueOf(i);
-				break;
+    //UB weight dummy
+    public static String dummyUBweight(FE_Data_Raw data_raw_list, HashMap<String,HashMap<String,Double>> ub_weight_map,HashMap<String,String> brandid2inx) {
+		String feat = "";
+		String [] strs = data_raw_list.activity_log.split("#");
+		HashMap<String, Double> bw = ub_weight_map.get(data_raw_list.user_id);
+		HashSet<String> umb = new HashSet<String>();
+		for(int k=0;k<strs.length;k++){
+			String []strs2 = strs[k].split(":");
+			if(strs2.length==5){
+				String bid = brandid2inx.get(strs2[2]);
+				umb.add(bid);
 			}
 		}
-		return gender;
+		for(String bid : umb){
+			feat += "umBw|" + bid + ":" + bw.get(bid)+",";
+		}
+		if(!feat.equals(""))
+			feat = feat.substring(0,feat.length()-1);
+		return feat;
 	}
 
     //convert the data of format 2 to your desire format,
@@ -1590,22 +1109,24 @@ public class FE_Extractor {
         	merchant_brand.put(strs[0], brand_set);
         }
         
-      //load merchant feature
-      HashMap<String,String> merchant_feature = new HashMap<String, String>();
-      for(int i=numMerchant*3+numBrand+numCat;i<numMerchant*4+numBrand+numCat;i++){
-      	String [] strs = auxilary_data.get(i).split("@");
-      	merchant_feature.put(strs[0], strs[1]);
-      }
+        //load merchant feature
+        HashMap<String,String> merchant_feature = new HashMap<String, String>();
+        for(int i=numMerchant*3+numBrand+numCat;i<numMerchant*4+numBrand+numCat;i++){
+        	String [] strs = auxilary_data.get(i).split("@");
+        	merchant_feature.put(strs[0], strs[1]);
+        }
 //      System.out.println(merchant_feature.size());
         
         //extract user feature
 //        HashMap<String,String> uf_map = extractUserFeature4dummy(data_raw_list);
         HashMap<String,String> uf_map = extractUserFeature(data_raw_list,brandId2inx,catId2inx);
         //stat user buy cat
-        HashMap<String,HashSet<String>> user_cat = statUserBuyCat(data_raw_list, catId2inx);
+//        HashMap<String,HashSet<String>> user_cat = statUserBuyCat(data_raw_list, catId2inx);
         //stat user buy brand
-        HashMap<String,HashSet<String>> user_brand = statUserBuyBrand(data_raw_list, brandId2inx);
-
+//        HashMap<String,HashSet<String>> user_brand = statUserBuyBrand(data_raw_list, brandId2inx);
+        //stat UB weight
+//        HashMap<String, HashMap<String,Double>> ub_weight_map = statUBweight(data_raw_list, brandId2inx);
+        
         //the feature is defined by behavior log on itself and  top 5 similar merchants
         for(int i=0;i<num;i++){
             d = data_raw_list.get(i);
@@ -1617,17 +1138,22 @@ public class FE_Extractor {
                 d2.features = activity_log2feature(0,d.merchant_id,d.age_range,d.gender,d.activity_log,brandId2inx,catId2inx);
 //                String ucmc = ucatUmcat(d.user_id, d.merchant_id, user_cat, merchant_cat);
 //                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
+                //use ub weight
+//                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
 //                if(!ucmc.equals(""))
 //                	d2.features += "," + ucmc;
 //                if(!ubmb.equals(""))
 //                	d2.features += "," + ubmb;
+//                String ubw = dummyUBweight(d,ub_weight_map,brandId2inx);
+//                if(!ubw.equals(""))
+//                	d2.features += "," + ubw;
                 d2.label = d.label;
                 List<String> list = similarity_merchants.get(d.merchant_id);
                 for(int j=0;j<5;j++){
                     if(map.containsKey(d2.user_id+"|"+list.get(j))) {
 //                        d2.features += "," + activity_log2feature4dummy(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
-                        d2.features += "," + activity_log2simfeature(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)));
-//                        d2.features += "," + activity_log2feature(j+1,list.get(j),d.age_range,d.gender,map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
+//                        d2.features += "," + activity_log2simfeature(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)));
+                        d2.features += "," + activity_log2feature(j+1,list.get(j),d.age_range,d.gender,map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
                     }
                 }
                 d2.features += "," + uf_map.get(d.user_id);
@@ -1637,29 +1163,12 @@ public class FE_Extractor {
                 }else{
                 	d2.features += "," + "u|age|" + d.age_range + ":" + "1";
                 }
-                //fill null or "0" with random
-//                String age;
-//                if(d.age_range.equals("-999")||d.age_range.equals("0")){
-//                	age = fillNullAge();
-//                	d2.features += "," + "u|age|" + age + ":" + "1";
-//                }else{
-//                	age = d.age_range;
-//                	d2.features += "," + "u|age|" + age + ":" + "1";
-//                }
                 // gender
                 if (d.gender==null||d.gender.equals("-999")){
                 	d2.features += "," + "u|gender|" + "2" + ":" + "1";
                 }else{
                 	d2.features += "," + "u|gender|" + d.gender + ":" + "1";
                 }
-//                String gender;
-//                if(d.gender.equals("-999")||d.gender.equals("2")){
-//                	gender = fillNullGender();
-//                	d2.features += "," + "u|gender|" + gender + ":" + "1";
-//                }else{
-//                	gender = d.gender;
-//                	d2.features += "," + "u|gender|" + gender + ":" + "1";
-//                }
                 // age*gender
 //                if (d.age_range.equals("-999")&&d.gender.equals("-999")){
 //                	d2.features += "," + "u|a|g|m|" + "0|2|"+d.merchant_id+ ":" + "1";
@@ -1674,6 +1183,8 @@ public class FE_Extractor {
                 
                 //add merchant feature
                 d2.features += "," + merchant_feature.get(d.merchant_id);
+                //#brand in merchant
+//                d2.features += "," + "mbn:" +Math.log(merchant_brand.get(d.merchant_id).size()+1);
                 data_list.add(d2);
             }
         }
@@ -1761,10 +1272,14 @@ public class FE_Extractor {
         map.put("m"+"0"+"|"+"3|"+"9", count);
         count++;
         for (int action=0;action<=3;action++)
-        	for (int stat_type=10;stat_type<=15;stat_type++){
+        	for (int stat_type=10;stat_type<=17;stat_type++){
         		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
         		count++;
         	}
+        for (int st=18;st<=23;st++){
+        	map.put("m0|"+st, count);
+        	count++;
+        }
              
         return map;
     }

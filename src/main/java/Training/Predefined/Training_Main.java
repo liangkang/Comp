@@ -1,6 +1,7 @@
 package Training.Predefined;
 
 
+import Feature_Extraction.Predefined.FE_Partitioner;
 import com.aliyun.odps.data.TableInfo;
 import com.aliyun.odps.graph.GraphJob;
 import org.apache.commons.cli.*;
@@ -17,11 +18,12 @@ public class Training_Main {
 		GraphJob job = new GraphJob();
 		job.setGraphLoaderClass(Training_Loader.class);
 		job.setVertexClass(Training_Vertex.class);
+		job.setPartitionerClass(FE_Partitioner.class);
 		job.setLoadingVertexResolverClass(Training_VertexResolver.class);
 		job.setMaxIteration(Integer.parseInt(args[6]));
 		job.setNumWorkers(Integer.parseInt(args[0]));
 		job.set("odps.graph.load.checkpoint.limit.time", "60000000");
-		job.set("odps.graph.worker.cpu","800");
+		job.set("odps.graph.worker.cpu","300");
 		job.set("odps.graph.checkpoint.superstep.frequency","0");
 		job.set("odps.graph.job.priority","0");
 		job.setInt("number_of_vertices", Integer.parseInt(args[1]));

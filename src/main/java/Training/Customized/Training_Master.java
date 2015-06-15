@@ -245,9 +245,11 @@ public class Training_Master {
 		System.out.println(obj);
 
 	}
+	
+	
 
 	public void run() {
-//		FISTA_master();
-		GradientDescent_master();
+		FISTA_master();
+//		GradientDescent_master();
 	}
 }

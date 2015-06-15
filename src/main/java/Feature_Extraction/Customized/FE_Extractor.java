@@ -4,6 +4,9 @@ import Feature_Extraction.Predefined.FE_Data_Processed;
 import Feature_Extraction.Predefined.FE_Data_Raw;
 
 import java.util.*;
+import java.util.Map.Entry;
+
+import javax.swing.text.AbstractDocument.BranchElement;
 
 /**
  * Created by yice.zwl on 2015/5/7.
@@ -53,9 +56,9 @@ public class FE_Extractor {
         	map.put("cid|"+i, count+i);
         count += numCat;
         //用户购买过的cat,brand交merchant有的cat,brand dummy
-//        for(int i=0;i<numBrand;i++)
-//        	map.put("umb|"+i, count+i);
-//        count += numBrand;
+        for(int i=0;i<numBrand;i++)
+        	map.put("umb|"+i, count+i);
+        count += numBrand;
         
 //        for(int i=0;i<numCat;i++)
 //        	map.put("umc|"+i, count+i);
@@ -90,6 +93,28 @@ public class FE_Extractor {
         		for(int stat_type=0;stat_type<=7;stat_type++)
         		{
         			map.put(rank+"|"+"0"+"|"+action+"|"+stat_type, count);
+        			count++;
+        		}
+        // 615 11月点击/加购/收藏 / 双十一购买
+        for(int rank=0;rank<=5;rank++)
+        	for(int action=0;action<=3;action++){
+        		if(action!=2){
+        			map.put(rank+"|"+"11|"+action+"|8", count);
+        			count++;
+        		}
+        	}
+        // 615 最喜爱的TOPK品牌/类目有多少个在merchant里有交互/买过
+        int [] tK = {5,10};
+        for(int rank=0;rank<=0;rank++)
+        	for(int k : tK)
+        		for(int act=0;act<=1;act++){
+        			map.put(rank+"|"+"uTop"+k+"C|"+act, count);
+        			count++;
+        		}
+        for(int rank=0;rank<=0;rank++)
+        	for(int k : tK)
+        		for(int act=0;act<=1;act++){
+        			map.put(rank+"|"+"uTop"+k+"B|"+act, count);
         			count++;
         		}
         // sim u,merchant feature
@@ -136,6 +161,7 @@ public class FE_Extractor {
 //        			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
 //        			count++;
 //        		}
+        
         
         
         //user feature index
@@ -439,7 +465,9 @@ public class FE_Extractor {
             // 每个月行为数占比log
 //            feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log((double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+1)+",";
             // 615 11月点击/加购/收藏 / 双十一购买
-         
+            if(strsk[0].equals("11")&&!strsk[1].equals("2")&&map_db_c.containsKey("db11|2")){
+            	feature += rank+"|"+entry.getKey()+"|8"+":"+Math.log((double)entry.getValue()/(double)map_db_c.get("db11|2")+1)+",";
+            }
         }
         for(Map.Entry<String,HashSet<Integer>> entry: map_d.entrySet()){
         	// 每个月行为天数
@@ -497,7 +525,7 @@ public class FE_Extractor {
 				us.map_u_c = new HashMap<String, Integer>();
 				us.map_u_d = new HashMap<String, HashSet<Integer>>();
 				us.map_u_m = new HashMap<String, HashSet<String>>();
-//				us.map_db_c = new HashMap<String, Integer>();
+				us.map_db_c = new HashMap<String, Integer>();
 				us.map_all_m2 = new HashMap<String, HashSet<String>>();
 				us.map_all_m3 = new HashMap<String, HashSet<String>>();
 				
@@ -570,13 +598,13 @@ public class FE_Extractor {
 	                	us.map_all_d.put("0"+"|"+strs2[4], set_d);
 	                }
 	                // 用户双11|行为 计数
-//	                if(month==11&&day==11){
-//	                	if(us.map_db_c.containsKey("db11"+"|"+strs2[4])){
-//	                		us.map_db_c.put("db11"+"|"+strs2[4], us.map_db_c.get("db11"+"|"+strs2[4])+1);
-//	                	} else{
-//	                		us.map_db_c.put("db11"+"|"+strs2[4], 1);
-//	                	}
-//	                }
+	                if(month==11&&day==11){
+	                	if(us.map_db_c.containsKey("db11"+"|"+strs2[4])){
+	                		us.map_db_c.put("db11"+"|"+strs2[4], us.map_db_c.get("db11"+"|"+strs2[4])+1);
+	                	} else{
+	                		us.map_db_c.put("db11"+"|"+strs2[4], 1);
+	                	}
+	                }
 	                // 用户每个月|行为 计数
 	                if(us.map_u_c.containsKey(month+"|"+strs2[4])){
 	                	us.map_u_c.put(month+"|"+strs2[4], us.map_u_c.get(month+"|"+strs2[4])+1);
@@ -825,6 +853,156 @@ public class FE_Extractor {
         feature += merchant_id+":"+"1";
         return feature;
     }
+    
+    // 最喜爱的TOPK品牌/类目有多少个在merchant里有交互/买过 615
+    public static String extractUserTopKfeature(int rank,FE_Data_Raw d, HashMap<String,String> catid2inx,HashMap<String,String> brandid2inx, HashMap<String,HashSet<String>> userTopKCat, HashMap<String,HashSet<String>> userTopKBrand, int K) {
+		String feature = "";
+		String [] strs = d.activity_log.split("#");
+		HashSet<String> userTopKBehCatInM = new HashSet<String>();
+		HashSet<String> userTopKBuyCatInM = new HashSet<String>();
+		HashSet<String> userTopKBehBrandInM = new HashSet<String>();
+		HashSet<String> userTopKBuyBrandInM = new HashSet<String>();
+		for(int i=0;i<strs.length;i++){
+			String []strs2 = strs[i].split(":");
+			String bid = brandid2inx.get(strs2[2]);
+            String cid = catid2inx.get(strs2[1]);
+            if(strs2.length==5) {
+            	userTopKBehCatInM.add(cid);
+            	userTopKBehBrandInM.add(bid);
+            	if(strs2[4].equals("2")){
+            		userTopKBuyCatInM.add(cid);
+            		userTopKBuyBrandInM.add(bid);
+            	}
+            }
+		}
+		//cat交互
+		HashSet<String> union = new HashSet<String>();
+		union.addAll(userTopKCat.get(d.user_id));
+		union.retainAll(userTopKBehCatInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"C|"+"0"+":"+Math.log(union.size()+1)+",";
+		//cat购买
+		union.clear();
+		union.addAll(userTopKCat.get(d.user_id));
+		union.retainAll(userTopKBuyCatInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"C|"+"1"+":"+Math.log(union.size()+1)+",";
+		//brand交互
+		union.clear();
+		union.addAll(userTopKBrand.get(d.user_id));
+		union.retainAll(userTopKBehBrandInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"B|"+"0"+":"+Math.log(union.size()+1)+",";
+		//brand购买
+		union.clear();
+		union.addAll(userTopKBrand.get(d.user_id));
+		union.retainAll(userTopKBuyBrandInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"B|"+"1"+":"+Math.log(union.size()+1)+",";
+		if(!feature.equals(""))
+			feature = feature.substring(0,feature.length()-1);
+		return feature;
+	}
+    // 获得用户交互最多的K个类别
+    public static HashMap<String,HashSet<String>> statUserTopKCat(List<FE_Data_Raw> data_raw_list, HashMap<String,String> catid2inx, int K) {
+    	HashMap<String,HashSet<String>> userTopKCat_map = new HashMap<String, HashSet<String>>();
+    	HashMap<String, TreeMap<String, Integer>> userBehCatCount = new HashMap<String, TreeMap<String,Integer>>();
+    	int num = data_raw_list.size();
+    	FE_Data_Raw d;
+    	for(int i=0;i<num;i++){
+    		d = data_raw_list.get(i);
+    		String [] strs = d.activity_log.split("#");
+    		if(!userBehCatCount.containsKey(d.user_id)){
+    			TreeMap<String,Integer> cat_count_map = new TreeMap<String, Integer>();
+    			userBehCatCount.put(d.user_id, cat_count_map);
+    		}
+    		TreeMap<String, Integer> cat_count_map = userBehCatCount.get(d.user_id);
+    		for(int k=0;k<strs.length;k++){
+    			String []strs2 = strs[k].split(":");
+	            if (strs2.length==5){
+	            	String cid = catid2inx.get(strs2[1]);
+	            	if(cat_count_map.containsKey(cid)){
+	            		cat_count_map.put(cid, cat_count_map.get(cid)+1);
+	            	}else{
+	            		cat_count_map.put(cid, 1);
+	            	}
+	            }
+    		}
+    		userBehCatCount.put(d.user_id, cat_count_map);
+    	}
+    	for(Map.Entry<String, TreeMap<String,Integer>> entry : userBehCatCount.entrySet()){
+    		HashSet<String> topKCat = new HashSet<String>();
+    		
+    		TreeMap<String,Integer> cat_count_map = entry.getValue();
+    		List<Entry<String, Integer>> li = new ArrayList<Map.Entry<String,Integer>>(cat_count_map.entrySet());
+    		Collections.sort(li, new Comparator<Entry<String, Integer>>() {
+				@Override
+				public int compare(Entry<String, Integer> o1,
+						Entry<String, Integer> o2) {
+					return o2.getValue() - o1.getValue();
+				}
+				
+			});
+    		int lis = li.size()-1;
+    		for(int i=0;i<K;i++){
+    			if(i>lis)
+    				break;
+    			topKCat.add(li.get(i).getKey());
+    		}
+    		userTopKCat_map.put(entry.getKey(), topKCat);
+    	}
+    	return userTopKCat_map;
+	}
+    // 获得用户交互最多的K个品牌
+    public static HashMap<String,HashSet<String>> statUserTopKBrand(List<FE_Data_Raw> data_raw_list, HashMap<String,String> brandid2inx, int K) {
+    	HashMap<String,HashSet<String>> userTopKBrand_map = new HashMap<String, HashSet<String>>();
+    	HashMap<String, TreeMap<String, Integer>> userBehBrandCount = new HashMap<String, TreeMap<String,Integer>>();
+    	int num = data_raw_list.size();
+    	FE_Data_Raw d;
+    	for(int i=0;i<num;i++){
+    		d = data_raw_list.get(i);
+    		String [] strs = d.activity_log.split("#");
+    		if(!userBehBrandCount.containsKey(d.user_id)){
+    			TreeMap<String,Integer> brand_count_map = new TreeMap<String, Integer>();
+    			userBehBrandCount.put(d.user_id, brand_count_map);
+    		}
+    		TreeMap<String, Integer> brand_count_map = userBehBrandCount.get(d.user_id);
+    		for(int k=0;k<strs.length;k++){
+    			String []strs2 = strs[k].split(":");
+	            if (strs2.length==5){
+	            	String bid = brandid2inx.get(strs2[2]);
+	            	if(brand_count_map.containsKey(bid)){
+	            		brand_count_map.put(bid, brand_count_map.get(bid)+1);
+	            	}else{
+	            		brand_count_map.put(bid, 1);
+	            	}
+	            }
+    		}
+    		userBehBrandCount.put(d.user_id, brand_count_map);
+    	}
+    	for(Map.Entry<String, TreeMap<String,Integer>> entry : userBehBrandCount.entrySet()){
+    		HashSet<String> topKBrand = new HashSet<String>();
+    		
+    		TreeMap<String,Integer> brand_count_map = entry.getValue();
+    		List<Entry<String, Integer>> li = new ArrayList<Map.Entry<String,Integer>>(brand_count_map.entrySet());
+    		Collections.sort(li, new Comparator<Entry<String, Integer>>() {
+				@Override
+				public int compare(Entry<String, Integer> o1,
+						Entry<String, Integer> o2) {
+					return o2.getValue() - o1.getValue();
+				}
+				
+			});
+    		int lis = li.size()-1;
+    		for(int i=0;i<K;i++){
+    			if(i>lis)
+    				break;
+    			topKBrand.add(li.get(i).getKey());
+    		}
+    		userTopKBrand_map.put(entry.getKey(), topKBrand);
+    	}
+    	return userTopKBrand_map;
+	}
     
     //Stat cat of user buy
     public static HashMap<String,HashSet<String>> statUserBuyCat(List<FE_Data_Raw> data_raw_list, HashMap<String,String> catid2inx) {
@@ -1123,9 +1301,15 @@ public class FE_Extractor {
         //stat user buy cat
 //        HashMap<String,HashSet<String>> user_cat = statUserBuyCat(data_raw_list, catId2inx);
         //stat user buy brand
-//        HashMap<String,HashSet<String>> user_brand = statUserBuyBrand(data_raw_list, brandId2inx);
+        HashMap<String,HashSet<String>> user_brand = statUserBuyBrand(data_raw_list, brandId2inx);
         //stat UB weight
 //        HashMap<String, HashMap<String,Double>> ub_weight_map = statUBweight(data_raw_list, brandId2inx);
+        //stat user TopK Cat
+        HashMap<String,HashSet<String>> userTop5Cat = statUserTopKCat(data_raw_list, catId2inx, 5);
+        HashMap<String,HashSet<String>> userTop10Cat = statUserTopKCat(data_raw_list, catId2inx, 10);
+        //stat user TopK Brand
+        HashMap<String,HashSet<String>> userTop5Brand = statUserTopKBrand(data_raw_list, brandId2inx, 5);
+        HashMap<String,HashSet<String>> userTop10Brand = statUserTopKBrand(data_raw_list, brandId2inx, 10);
         
         //the feature is defined by behavior log on itself and  top 5 similar merchants
         for(int i=0;i<num;i++){
@@ -1137,16 +1321,23 @@ public class FE_Extractor {
 //                d2.features = activity_log2feature4dummy(0,d.merchant_id,d.activity_log,brandId2inx,catId2inx);
                 d2.features = activity_log2feature(0,d.merchant_id,d.age_range,d.gender,d.activity_log,brandId2inx,catId2inx);
 //                String ucmc = ucatUmcat(d.user_id, d.merchant_id, user_cat, merchant_cat);
-//                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
+                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
                 //use ub weight
 //                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
 //                if(!ucmc.equals(""))
 //                	d2.features += "," + ucmc;
-//                if(!ubmb.equals(""))
-//                	d2.features += "," + ubmb;
+                if(!ubmb.equals(""))
+                	d2.features += "," + ubmb;
 //                String ubw = dummyUBweight(d,ub_weight_map,brandId2inx);
 //                if(!ubw.equals(""))
 //                	d2.features += "," + ubw;
+                // userTopK cat/brand in M
+                String ut5f = extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
+                String ut10f = extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
+                if(!ut5f.equals(""))
+                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
+                if(!ut10f.equals(""))
+                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
                 d2.label = d.label;
                 List<String> list = similarity_merchants.get(d.merchant_id);
                 for(int j=0;j<5;j++){

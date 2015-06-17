@@ -80,7 +80,8 @@ public class FE_Extractor {
 //        	map.put("u|cid|b|"+i,count+i);
 //        count += numCat;
         //um feature index
-        for(int rank=0;rank<=5;rank++)
+        int simNum = 0;
+        for(int rank=0;rank<=simNum;rank++)
             for(int month=5;month<=11;month++)
                 for(int action=0;action<=3;action++)
                 	for(int stat_type=0;stat_type<=5;stat_type++)
@@ -88,7 +89,7 @@ public class FE_Extractor {
                 		map.put(rank+"|"+month+"|"+action+"|"+stat_type,count);
                 		count++;
                 	}
-        for(int rank=0;rank<=5;rank++)
+        for(int rank=0;rank<=simNum;rank++)
         	for(int action=0;action<=3;action++)
         		for(int stat_type=0;stat_type<=7;stat_type++)
         		{
@@ -96,37 +97,37 @@ public class FE_Extractor {
         			count++;
         		}
         // 615 11月点击/加购/收藏 / 双十一购买
-        for(int rank=0;rank<=5;rank++)
-        	for(int action=0;action<=3;action++){
-        		if(action!=2){
-        			map.put(rank+"|"+"11|"+action+"|8", count);
-        			count++;
-        		}
-        	}
+//        for(int rank=0;rank<=simNum;rank++)
+//        	for(int action=0;action<=3;action++){
+//        		if(action!=2){
+//        			map.put(rank+"|"+"11|"+action+"|8", count);
+//        			count++;
+//        		}
+//        	}
         // 615 最喜爱的TOPK品牌/类目有多少个在merchant里有交互/买过
-        int [] tK = {5,10};
-        for(int rank=0;rank<=0;rank++)
-        	for(int k : tK)
-        		for(int act=0;act<=1;act++){
-        			map.put(rank+"|"+"uTop"+k+"C|"+act, count);
-        			count++;
-        		}
-        for(int rank=0;rank<=0;rank++)
-        	for(int k : tK)
-        		for(int act=0;act<=1;act++){
-        			map.put(rank+"|"+"uTop"+k+"B|"+act, count);
-        			count++;
-        		}
+//        int [] tK = {5,10};
+//        for(int rank=0;rank<=0;rank++)
+//        	for(int k : tK)
+//        		for(int act=0;act<=1;act++){
+//        			map.put(rank+"|"+"uTop"+k+"C|"+act, count);
+//        			count++;
+//        		}
+//        for(int rank=0;rank<=0;rank++)
+//        	for(int k : tK)
+//        		for(int act=0;act<=1;act++){
+//        			map.put(rank+"|"+"uTop"+k+"B|"+act, count);
+//        			count++;
+//        		}
         // sim u,merchant feature
-//        for(int rank=1;rank<6;rank++)
-//            for(int month=5;month<=11;month++)
-//                for(int action=0;action<=3;action++) {
-//                    map.put(rank+"|"+month+"|"+action,count);
-//                    count++;
-//                }
+        for(int rank=1;rank<6;rank++)
+            for(int month=5;month<=11;month++)
+                for(int action=0;action<=3;action++) {
+                    map.put(rank+"|"+month+"|"+action,count);
+                    count++;
+                }
         
         // double11 feature
-//        for(int rank=0;rank<=0;rank++)
+//        for(int rank=0;rank<=simNum;rank++)
 //        	for(int action=0;action<=3;action++)
 //        		for(int st=0;st<=1;st++){
 //        			if(action!=2){
@@ -145,22 +146,22 @@ public class FE_Extractor {
 //        					count++;
 //        				}
         //log type
-//        int [] umalldayLogType = {2,4,5,6,7};
-//        int [] ummonthLogType = {2,4,5};
-//        for(int rank=0;rank<=5;rank++)
-//            for(int month=5;month<=11;month++)
-//                for(int action=0;action<=3;action++)
-//                	for(int st : ummonthLogType){
-//                		map.put(rank+"|"+month+"|"+action+"|"+st+"l",count);
-//                		count++;
-//                	}
-//        for(int rank=0;rank<=5;rank++)
-//        	for(int action=0;action<=3;action++)
-//        		for(int st : umalldayLogType)
-//        		{
-//        			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
-//        			count++;
-//        		}
+        int [] umalldayLogType = {2,4,5,6,7};
+        int [] ummonthLogType = {2,4,5};
+        for(int rank=0;rank<=simNum;rank++)
+            for(int month=5;month<=11;month++)
+                for(int action=0;action<=3;action++)
+                	for(int st : ummonthLogType){
+                		map.put(rank+"|"+month+"|"+action+"|"+st+"l",count);
+                		count++;
+                	}
+        for(int rank=0;rank<=simNum;rank++)
+        	for(int action=0;action<=3;action++)
+        		for(int st : umalldayLogType)
+        		{
+        			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
+        			count++;
+        		}
         
         
         
@@ -189,20 +190,20 @@ public class FE_Extractor {
 //        		map.put("u|db11|"+action+"|"+st, count);
 //        		count++;
 //        	}
-//        int [] userAlldayLogType = {2,4,6,7,8,11,12,13,15};
-//        int [] userMonthLogType = {2,4};
-//        for(int month=5;month<=11;month++)
-//        	for(int action=0;action<=3;action++)
-//        		for(int st : userMonthLogType){
-//        			map.put("u"+month+"|"+action+"|"+st+"l",count);
-//        			count++;
-//        		}
-//        for(int action=0;action<=3;action++)
-//    		for(int st : userAlldayLogType)
-//    		{
-//    			map.put("u"+"0"+"|"+action+"|"+st+"l", count);
-//    			count++;
-//    		}
+        int [] userAlldayLogType = {2,4,6,7,8,11,12,13,15};
+        int [] userMonthLogType = {2,4};
+        for(int month=5;month<=11;month++)
+        	for(int action=0;action<=3;action++)
+        		for(int st : userMonthLogType){
+        			map.put("u"+month+"|"+action+"|"+st+"l",count);
+        			count++;
+        		}
+        for(int action=0;action<=3;action++)
+    		for(int st : userAlldayLogType)
+    		{
+    			map.put("u"+"0"+"|"+action+"|"+st+"l", count);
+    			count++;
+    		}
         
         //用户购买可能性feature index
         map.put("u"+"0"+"|"+"0"+"|"+"6", count);
@@ -274,12 +275,25 @@ public class FE_Extractor {
         		count++;
         	}
         
-//        for (int st=18;st<=23;st++){
-//        	map.put("m0|"+st, count);
-//        	count++;
-//        }
-//        map.put("mbn", count);
-//        count++;
+        // 611
+        for (int action=0;action<=3;action++)
+        	for (int stat_type=16;stat_type<=17;stat_type++){
+        		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
+        		count++;
+        	}
+        for (int st=18;st<=23;st++){
+        	map.put("m0|"+st, count);
+        	count++;
+        }
+//        // 商家各个age/gender购买占比 616
+        for(int age=0;age<=8;age++){
+        	map.put("m0BuyAge|"+age, count);
+        	count++;
+        }
+        for(int gender=0;gender<=2;gender++){
+        	map.put("m0BuyGen|"+gender, count);
+        	count++;
+        }
         
         return map;
     }
@@ -294,6 +308,8 @@ public class FE_Extractor {
 		}
 		return feat;
 	}
+    
+
     
 
     // um特征提取
@@ -413,7 +429,7 @@ public class FE_Extractor {
             // *age*gender
 //            feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|2"+":"+map_all_c.get(entry.getKey())/(double)entry.getValue().size()+",";
             // 整个时间段行为数/行为天数log
-//            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map_all_c.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
+            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map_all_c.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
         }
         for(Map.Entry<String, HashSet<String>> entry: map_all_i.entrySet()){
         	// 整个时间段行为产品数
@@ -424,8 +440,8 @@ public class FE_Extractor {
         	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map_all_c.get(entry.getKey())+",";
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map_all_c.get(entry.getKey())+",";
-        	// 整个时间段行为产品数/行为数log
-//        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map_all_c.get(entry.getKey())+1)+",";
+//        	 整个时间段行为产品数/行为数log
+        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map_all_c.get(entry.getKey())+1)+",";
         }
         for(Map.Entry<String, HashSet<Date>> entry: map_all_dat.entrySet()){
         	// 整个时间段最近行为时间差倒数
@@ -433,18 +449,18 @@ public class FE_Extractor {
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|5"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+",";
         	// 整个时间段最近行为时间差倒数log
-//        	feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+1)+",";
+        	feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry.getValue()).getTime()/86400000))+1)+",";
         	// 整个时间段最远行为时间差倒数
         	feature += rank+"|"+entry.getKey()+"|6"+":"+1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+",";
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|6"+":"+1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+",";
         	// 整个时间段最远行为时间差倒数log
-//        	feature += rank+"|"+entry.getKey()+"|6l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+1)+",";
+        	feature += rank+"|"+entry.getKey()+"|6l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000))+1)+",";
         	// 整个时间段第一次行为与最后一次行为的时间差
         	if(entry.getValue().size()>1){
         		feature += rank+"|"+entry.getKey() + "|7" + ":" +(double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+",";
         		// 整个时间段第一次行为与最后一次行为的时间差log
-//        		feature += rank+"|"+entry.getKey() + "|7l" + ":" +Math.log((double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+1)+",";
+        		feature += rank+"|"+entry.getKey() + "|7l" + ":" +Math.log((double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+1)+",";
         	}
         }
 //        for(Map.Entry<String, Integer> entry: map_db_c.entrySet()){
@@ -463,11 +479,11 @@ public class FE_Extractor {
             String [] strsk = entry.getKey().split("\\|");
             feature += rank+"|"+entry.getKey()+"|5"+":"+(double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+",";
             // 每个月行为数占比log
-//            feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log((double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+1)+",";
+            feature += rank+"|"+entry.getKey()+"|5l"+":"+Math.log((double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+1)+",";
             // 615 11月点击/加购/收藏 / 双十一购买
-            if(strsk[0].equals("11")&&!strsk[1].equals("2")&&map_db_c.containsKey("db11|2")){
-            	feature += rank+"|"+entry.getKey()+"|8"+":"+Math.log((double)entry.getValue()/(double)map_db_c.get("db11|2")+1)+",";
-            }
+//            if(strsk[0].equals("11")&&!strsk[1].equals("2")&&map_db_c.containsKey("db11|2")){
+//            	feature += rank+"|"+entry.getKey()+"|8"+":"+Math.log((double)entry.getValue()/(double)map_db_c.get("db11|2")+1)+",";
+//            }
         }
         for(Map.Entry<String,HashSet<Integer>> entry: map_d.entrySet()){
         	// 每个月行为天数
@@ -475,7 +491,7 @@ public class FE_Extractor {
             // 每个月行为数/行为天数
             feature += rank+"|"+entry.getKey()+"|2"+":"+map.get(entry.getKey())/(double)entry.getValue().size()+",";
             // 每个月行为数/行为天数log
-//            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
+            feature += rank+"|"+entry.getKey()+"|2l"+":"+Math.log(map.get(entry.getKey())/(double)entry.getValue().size()+1)+",";
         }
         for(Map.Entry<String, HashSet<String>> entry: map_i.entrySet()){
         	// 每个月行为产品数
@@ -483,7 +499,7 @@ public class FE_Extractor {
         	// 每个月行为产品数/行为数
         	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map.get(entry.getKey())+",";
         	// 每个月行为产品数/行为数log
-//        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map.get(entry.getKey())+1)+",";
+        	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map.get(entry.getKey())+1)+",";
         }
         
         feature += merchant_id+":"+"1";
@@ -660,7 +676,7 @@ public class FE_Extractor {
 	            	// *age*gender
 //	            	feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|6"+":"+(double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+",";
 	            	// 购买可能性：购买数/行为数log
-//	            	feature += "u"+entry2.getKey()+"|6l"+":"+Math.log((double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+1)+",";
+	            	feature += "u"+entry2.getKey()+"|6l"+":"+Math.log((double)us1.map_all_c.get("0|2")/(double)entry2.getValue()+1)+",";
 	            }
 	        }
 			for(Map.Entry<String,HashSet<Date>> entry2: us1.map_all_d.entrySet()){
@@ -673,19 +689,19 @@ public class FE_Extractor {
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|2"+":"+us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
 	            // 整个时间段行为数/行为天数log
-//	            feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
+	            feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_all_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
 	            // 整个时间段最近时间差倒数
 	            feature += "u"+entry2.getKey()+"|4"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|4"+":"+1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+",";
 	            // 整个时间段最近时间差倒数log
-//	            feature += "u"+entry2.getKey()+"|4l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+1)+",";
+	            feature += "u"+entry2.getKey()+"|4l"+":"+Math.log(1/((double)(last_day.getTime()/86400000-Collections.max(entry2.getValue()).getTime()/86400000))+1)+",";
 	            // 整个时间段最远时间差倒数
 	            feature += "u"+entry2.getKey()+"|8"+":"+1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|8"+":"+1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	            // 整个时间段最远时间差倒数log
-//	            feature += "u"+entry2.getKey()+"|8l"+":"+Math.log(1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+1)+",";
+	            feature += "u"+entry2.getKey()+"|8l"+":"+Math.log(1/(double)(last_day.getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+1)+",";
 	            // 整个时间段最近-最远时间差
 	            //feature += "u"+entry2.getKey()+"|9"+":"+1/(double)(Collections.max(entry2.getValue()).getTime()/86400000-Collections.min(entry2.getValue()).getTime()/86400000)+",";
 	        }
@@ -705,7 +721,7 @@ public class FE_Extractor {
 	            // *age*gender
 //	            feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|7"+":"+(double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+",";
 	            // 整个时间段行为m数/行为数log
-//	            feature += "u"+entry2.getKey()+"|7l"+":"+Math.log((double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+1)+",";
+	            feature += "u"+entry2.getKey()+"|7l"+":"+Math.log((double)entry2.getValue().size()/(double)us1.map_all_c.get(entry2.getKey())+1)+",";
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m2.entrySet()){
 	        	// 整个时间段行为天数>=2 m数
@@ -736,7 +752,7 @@ public class FE_Extractor {
 					// *age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|11"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为天数大于1的m占比log
-//					feature += "u"+entry2.getKey()+"|11l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+					feature += "u"+entry2.getKey()+"|11l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 				if(c5>0){
 					feature += "u"+entry2.getKey()+"|10"+":"+Math.log(c5+1)+",";
@@ -747,7 +763,7 @@ public class FE_Extractor {
 					// *age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|12"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为天数大于4的m占比log
-//					feature += "u"+entry2.getKey()+"|12l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+					feature += "u"+entry2.getKey()+"|12l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 	        }
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_all_m3.entrySet()){
@@ -779,7 +795,7 @@ public class FE_Extractor {
 					//*age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|13"+":"+c2/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为月数大于2的m占比log
-//					feature += "u"+entry2.getKey()+"|13l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+					feature += "u"+entry2.getKey()+"|13l"+":"+Math.log(c2/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 				if(c3>0){
 					feature += "u"+entry2.getKey()+"|14"+":"+Math.log(c3+1)+",";
@@ -790,7 +806,7 @@ public class FE_Extractor {
 					//*age*gender
 //					feature += "u"+"|ag|"+age+"|"+gender+"|"+entry2.getKey()+"|15"+":"+c3/(double)us1.map_all_m.get(entry2.getKey()).size()+",";
 					//整个时间段行为月数大于3的m占比log
-//					feature += "u"+entry2.getKey()+"|15l"+":"+Math.log(c3/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
+					feature += "u"+entry2.getKey()+"|15l"+":"+Math.log(c3/(double)us1.map_all_m.get(entry2.getKey()).size()+1)+",";
 				}
 	        }
 //			for(Map.Entry<String,Integer> entry2: us1.map_db_c.entrySet()){
@@ -807,7 +823,7 @@ public class FE_Extractor {
 				String [] strsk = entry2.getKey().split("\\|");
 				feature += "u"+entry2.getKey()+"|4"+":"+(double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+",";
 				// 每个月行为数占比log
-//				feature += "u"+entry2.getKey()+"|4l"+":"+Math.log((double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+1)+",";
+				feature += "u"+entry2.getKey()+"|4l"+":"+Math.log((double)entry2.getValue()/(double)us1.map_all_c.get("0"+"|"+strsk[1])+1)+",";
 			}
 			for(Map.Entry<String, HashSet<Integer>> entry2: us1.map_u_d.entrySet()){
 				// 每个月行为天数
@@ -815,7 +831,7 @@ public class FE_Extractor {
 				// 每个月行为数/行为天数
 				feature += "u"+entry2.getKey()+"|2"+":"+us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+",";
 				// 每个月行为数/行为天数log
-//				feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
+				feature += "u"+entry2.getKey()+"|2l"+":"+Math.log(us1.map_u_c.get(entry2.getKey())/(double)entry2.getValue().size()+1)+",";
 			}
 			for(Map.Entry<String,HashSet<String>> entry2: us1.map_u_m.entrySet()){
 	        	// 每个月行为m数
@@ -906,42 +922,62 @@ public class FE_Extractor {
     // 获得用户交互最多的K个类别
     public static HashMap<String,HashSet<String>> statUserTopKCat(List<FE_Data_Raw> data_raw_list, HashMap<String,String> catid2inx, int K) {
     	HashMap<String,HashSet<String>> userTopKCat_map = new HashMap<String, HashSet<String>>();
-    	HashMap<String, TreeMap<String, Integer>> userBehCatCount = new HashMap<String, TreeMap<String,Integer>>();
+    	HashMap<String, TreeMap<String, Double>> userBehCatCount = new HashMap<String, TreeMap<String,Double>>();
     	int num = data_raw_list.size();
     	FE_Data_Raw d;
+    	Date firstDate = new Date(2014,5,11);
     	for(int i=0;i<num;i++){
     		d = data_raw_list.get(i);
+    		if(d.activity_log.equals(""))
+    			continue;
     		String [] strs = d.activity_log.split("#");
     		if(!userBehCatCount.containsKey(d.user_id)){
-    			TreeMap<String,Integer> cat_count_map = new TreeMap<String, Integer>();
+    			TreeMap<String,Double> cat_count_map = new TreeMap<String, Double>();
     			userBehCatCount.put(d.user_id, cat_count_map);
     		}
-    		TreeMap<String, Integer> cat_count_map = userBehCatCount.get(d.user_id);
+    		TreeMap<String, Double> cat_count_map = userBehCatCount.get(d.user_id);
     		for(int k=0;k<strs.length;k++){
     			String []strs2 = strs[k].split(":");
 	            if (strs2.length==5){
 	            	String cid = catid2inx.get(strs2[1]);
+	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
+    				int day = Integer.parseInt(strs2[3].substring(2,4));
+    				if (month==11&&day>11)
+    					day = 11;
+    				Date dat = new Date(2014,month,day);
+    				double beh_w;
+    				if(strs2[4].equals("0"))
+    					beh_w = 0.5;
+    				else if(strs2[4].equals("1")||strs2[4].equals("3"))
+    					beh_w = 1;
+    				else
+    					beh_w = 5;
+    				double time_w = ((int)(dat.getTime()/86400000 - firstDate.getTime()/86400000)/7+1)/10;
 	            	if(cat_count_map.containsKey(cid)){
-	            		cat_count_map.put(cid, cat_count_map.get(cid)+1);
+	            		cat_count_map.put(cid, cat_count_map.get(cid)+beh_w*time_w);
 	            	}else{
-	            		cat_count_map.put(cid, 1);
+	            		cat_count_map.put(cid, beh_w*time_w);
 	            	}
 	            }
     		}
     		userBehCatCount.put(d.user_id, cat_count_map);
     	}
-    	for(Map.Entry<String, TreeMap<String,Integer>> entry : userBehCatCount.entrySet()){
+    	for(Map.Entry<String, TreeMap<String,Double>> entry : userBehCatCount.entrySet()){
     		HashSet<String> topKCat = new HashSet<String>();
     		
-    		TreeMap<String,Integer> cat_count_map = entry.getValue();
-    		List<Entry<String, Integer>> li = new ArrayList<Map.Entry<String,Integer>>(cat_count_map.entrySet());
-    		Collections.sort(li, new Comparator<Entry<String, Integer>>() {
+    		TreeMap<String,Double> cat_count_map = entry.getValue();
+    		List<Entry<String, Double>> li = new ArrayList<Map.Entry<String,Double>>(cat_count_map.entrySet());
+    		Collections.sort(li, new Comparator<Entry<String, Double>>() {
 				@Override
-				public int compare(Entry<String, Integer> o1,
-						Entry<String, Integer> o2) {
-					return o2.getValue() - o1.getValue();
+				public int compare(Entry<String, Double> o1,
+						Entry<String, Double> o2) {
+					double re = o2.getValue() - o1.getValue();
+					if(re>0)
+						return 1;
+					else if(re<0)
+						return -1;
+					else return 0;
 				}
-				
 			});
     		int lis = li.size()-1;
     		for(int i=0;i<K;i++){
@@ -956,40 +992,61 @@ public class FE_Extractor {
     // 获得用户交互最多的K个品牌
     public static HashMap<String,HashSet<String>> statUserTopKBrand(List<FE_Data_Raw> data_raw_list, HashMap<String,String> brandid2inx, int K) {
     	HashMap<String,HashSet<String>> userTopKBrand_map = new HashMap<String, HashSet<String>>();
-    	HashMap<String, TreeMap<String, Integer>> userBehBrandCount = new HashMap<String, TreeMap<String,Integer>>();
+    	HashMap<String, TreeMap<String, Double>> userBehBrandCount = new HashMap<String, TreeMap<String,Double>>();
     	int num = data_raw_list.size();
     	FE_Data_Raw d;
+    	Date firstDate = new Date(2014,5,11);
     	for(int i=0;i<num;i++){
     		d = data_raw_list.get(i);
+    		if(d.activity_log.equals(""))
+    			continue;
     		String [] strs = d.activity_log.split("#");
     		if(!userBehBrandCount.containsKey(d.user_id)){
-    			TreeMap<String,Integer> brand_count_map = new TreeMap<String, Integer>();
+    			TreeMap<String,Double> brand_count_map = new TreeMap<String, Double>();
     			userBehBrandCount.put(d.user_id, brand_count_map);
     		}
-    		TreeMap<String, Integer> brand_count_map = userBehBrandCount.get(d.user_id);
+    		TreeMap<String, Double> brand_count_map = userBehBrandCount.get(d.user_id);
     		for(int k=0;k<strs.length;k++){
     			String []strs2 = strs[k].split(":");
 	            if (strs2.length==5){
 	            	String bid = brandid2inx.get(strs2[2]);
+	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
+    				int day = Integer.parseInt(strs2[3].substring(2,4));
+    				if (month==11&&day>11)
+    					day = 11;
+    				Date dat = new Date(2014,month,day);
+    				double beh_w;
+    				if(strs2[4].equals("0"))
+    					beh_w = 0.5;
+    				else if(strs2[4].equals("1")||strs2[4].equals("3"))
+    					beh_w = 1;
+    				else
+    					beh_w = 5;
+    				double time_w = ((int)(dat.getTime()/86400000 - firstDate.getTime()/86400000)/7+1)/10;
 	            	if(brand_count_map.containsKey(bid)){
-	            		brand_count_map.put(bid, brand_count_map.get(bid)+1);
+	            		brand_count_map.put(bid, brand_count_map.get(bid)+beh_w*time_w);
 	            	}else{
-	            		brand_count_map.put(bid, 1);
+	            		brand_count_map.put(bid, beh_w*time_w);
 	            	}
 	            }
     		}
     		userBehBrandCount.put(d.user_id, brand_count_map);
     	}
-    	for(Map.Entry<String, TreeMap<String,Integer>> entry : userBehBrandCount.entrySet()){
+    	for(Map.Entry<String, TreeMap<String,Double>> entry : userBehBrandCount.entrySet()){
     		HashSet<String> topKBrand = new HashSet<String>();
     		
-    		TreeMap<String,Integer> brand_count_map = entry.getValue();
-    		List<Entry<String, Integer>> li = new ArrayList<Map.Entry<String,Integer>>(brand_count_map.entrySet());
-    		Collections.sort(li, new Comparator<Entry<String, Integer>>() {
+    		TreeMap<String,Double> brand_count_map = entry.getValue();
+    		List<Entry<String, Double>> li = new ArrayList<Map.Entry<String,Double>>(brand_count_map.entrySet());
+    		Collections.sort(li, new Comparator<Entry<String, Double>>() {
 				@Override
-				public int compare(Entry<String, Integer> o1,
-						Entry<String, Integer> o2) {
-					return o2.getValue() - o1.getValue();
+				public int compare(Entry<String, Double> o1,
+						Entry<String, Double> o2) {
+					double re = o2.getValue() - o1.getValue();
+					if(re>0)
+						return 1;
+					else if(re<0)
+						return -1;
+					else return 0;
 				}
 				
 			});
@@ -1028,8 +1085,10 @@ public class FE_Extractor {
     			String []strs2 = strs[k].split(":");
 	            if (strs2.length==5){
 	            	if(strs2[4].equals("2")){
-	            		cat_set.add(catid2inx.get(strs2[1]));
-	            		cat_set2.add(catid2inx.get(strs2[1])+","+strs2[3]);
+	            		if(catid2inx.containsKey(strs2[1])){
+	            			cat_set.add(catid2inx.get(strs2[1]));
+	            			cat_set2.add(catid2inx.get(strs2[1])+","+strs2[3]);
+	            		}
 	            	}
 	            }
     		}
@@ -1066,6 +1125,8 @@ public class FE_Extractor {
     	FE_Data_Raw d;
     	for(int i=0;i<num;i++){
     		d = data_raw_list.get(i);
+    		if(d.activity_log.equals(""))
+    			continue;
     		String [] strs = d.activity_log.split("#");
     		if(!user_brand.containsKey(d.user_id)){
     			HashSet<String> brand_set = new HashSet<String>();
@@ -1079,11 +1140,12 @@ public class FE_Extractor {
     		HashSet<String> brand_set2 = user_brand2.get(d.user_id);
     		for(int k=0;k<strs.length;k++){
     			String []strs2 = strs[k].split(":");
-    			
 	            if (strs2.length==5){
 	            	if(strs2[4].equals("2")){
-	            		brand_set.add(brandid2inx.get(strs2[2]));
-	            		brand_set2.add(brandid2inx.get(strs2[2])+","+strs2[3]);
+	            		if(brandid2inx.containsKey(strs2[2])){
+	            			brand_set.add(brandid2inx.get(strs2[2]));
+	            			brand_set2.add(brandid2inx.get(strs2[2])+","+strs2[3]);
+	            		}
 	            	}
 	            }
     		}
@@ -1160,6 +1222,8 @@ public class FE_Extractor {
     	Date firstDate = new Date(2014,5,11);
     	for(int i=0;i<num;i++){
     		d = data_raw_list.get(i);
+    		if(d.activity_log.equals(""))
+    			continue;
     		String [] strs = d.activity_log.split("#");
     		if(!ub_weight_map.containsKey(d.user_id)){
     			HashMap<String, Double> bw = new HashMap<String, Double>();
@@ -1305,11 +1369,11 @@ public class FE_Extractor {
         //stat UB weight
 //        HashMap<String, HashMap<String,Double>> ub_weight_map = statUBweight(data_raw_list, brandId2inx);
         //stat user TopK Cat
-        HashMap<String,HashSet<String>> userTop5Cat = statUserTopKCat(data_raw_list, catId2inx, 5);
-        HashMap<String,HashSet<String>> userTop10Cat = statUserTopKCat(data_raw_list, catId2inx, 10);
-        //stat user TopK Brand
-        HashMap<String,HashSet<String>> userTop5Brand = statUserTopKBrand(data_raw_list, brandId2inx, 5);
-        HashMap<String,HashSet<String>> userTop10Brand = statUserTopKBrand(data_raw_list, brandId2inx, 10);
+//        HashMap<String,HashSet<String>> userTop5Cat = statUserTopKCat(data_raw_list, catId2inx, 5);
+//        HashMap<String,HashSet<String>> userTop10Cat = statUserTopKCat(data_raw_list, catId2inx, 10);
+//        //stat user TopK Brand
+//        HashMap<String,HashSet<String>> userTop5Brand = statUserTopKBrand(data_raw_list, brandId2inx, 5);
+//        HashMap<String,HashSet<String>> userTop10Brand = statUserTopKBrand(data_raw_list, brandId2inx, 10);
         
         //the feature is defined by behavior log on itself and  top 5 similar merchants
         for(int i=0;i<num;i++){
@@ -1332,19 +1396,19 @@ public class FE_Extractor {
 //                if(!ubw.equals(""))
 //                	d2.features += "," + ubw;
                 // userTopK cat/brand in M
-                String ut5f = extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
-                String ut10f = extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
-                if(!ut5f.equals(""))
-                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
-                if(!ut10f.equals(""))
-                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
+//                String ut5f = extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
+//                String ut10f = extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
+//                if(!ut5f.equals(""))
+//                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
+//                if(!ut10f.equals(""))
+//                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
                 d2.label = d.label;
                 List<String> list = similarity_merchants.get(d.merchant_id);
                 for(int j=0;j<5;j++){
                     if(map.containsKey(d2.user_id+"|"+list.get(j))) {
 //                        d2.features += "," + activity_log2feature4dummy(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
-//                        d2.features += "," + activity_log2simfeature(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)));
-                        d2.features += "," + activity_log2feature(j+1,list.get(j),d.age_range,d.gender,map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
+                        d2.features += "," + activity_log2simfeature(j+1,list.get(j),map.get(d2.user_id+"|"+list.get(j)));
+//                        d2.features += "," + activity_log2feature(j+1,list.get(j),d.age_range,d.gender,map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
                     }
                 }
                 d2.features += "," + uf_map.get(d.user_id);
@@ -1374,8 +1438,6 @@ public class FE_Extractor {
                 
                 //add merchant feature
                 d2.features += "," + merchant_feature.get(d.merchant_id);
-                //#brand in merchant
-//                d2.features += "," + "mbn:" +Math.log(merchant_brand.get(d.merchant_id).size()+1);
                 data_list.add(d2);
             }
         }

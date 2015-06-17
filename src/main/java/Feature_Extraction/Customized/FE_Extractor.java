@@ -60,9 +60,9 @@ public class FE_Extractor {
         	map.put("umb|"+i, count+i);
         count += numBrand;
         
-//        for(int i=0;i<numCat;i++)
-//        	map.put("umc|"+i, count+i);
-//        count += numCat;
+        for(int i=0;i<numCat;i++)
+        	map.put("umc|"+i, count+i);
+        count += numCat;
         
         //UB weight
 //        for(int i=0;i<numBrand;i++)
@@ -257,6 +257,7 @@ public class FE_Extractor {
         count++;
         map.put("m"+"0"+"|"+"8", count);
         count++;
+        map.put("m"+"0"+"|"+"24", count);
         for (int month=5;month<=11;month++)
         	for (int action=0;action<=3;action++)
         		for (int stat_type=0;stat_type<=5;stat_type++){
@@ -276,24 +277,24 @@ public class FE_Extractor {
         	}
         
         // 611
-        for (int action=0;action<=3;action++)
-        	for (int stat_type=16;stat_type<=17;stat_type++){
-        		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
-        		count++;
-        	}
-        for (int st=18;st<=23;st++){
-        	map.put("m0|"+st, count);
-        	count++;
-        }
+//        for (int action=0;action<=3;action++)
+//        	for (int stat_type=16;stat_type<=17;stat_type++){
+//        		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
+//        		count++;
+//        	}
+//        for (int st=18;st<=23;st++){
+//        	map.put("m0|"+st, count);
+//        	count++;
+//        }
 //        // 商家各个age/gender购买占比 616
-        for(int age=0;age<=8;age++){
-        	map.put("m0BuyAge|"+age, count);
-        	count++;
-        }
-        for(int gender=0;gender<=2;gender++){
-        	map.put("m0BuyGen|"+gender, count);
-        	count++;
-        }
+//        for(int age=0;age<=8;age++){
+//        	map.put("m0BuyAge|"+age, count);
+//        	count++;
+//        }
+//        for(int gender=0;gender<=2;gender++){
+//        	map.put("m0BuyGen|"+gender, count);
+//        	count++;
+//        }
         
         return map;
     }
@@ -866,6 +867,8 @@ public class FE_Extractor {
         for(Map.Entry<String,Integer> entry: map.entrySet()){
             feature += rank+"|"+entry.getKey()+":"+Math.log((double)entry.getValue()+1)+",";
         }
+        
+        
         feature += merchant_id+":"+"1";
         return feature;
     }
@@ -1318,15 +1321,19 @@ public class FE_Extractor {
         
         //load brandId2inx
         HashMap<String,String> brandId2inx = new HashMap<String, String>();
+        HashMap<String,Integer> brandSalesRank = new HashMap<String, Integer>();
         for(int i=numMerchant;i<numMerchant+numBrand;i++){
         	String [] strs = auxilary_data.get(i).split(",");
         	brandId2inx.put(strs[0], strs[1]);
+        	brandSalesRank.put(strs[1], Integer.parseInt(strs[2]));
         }
         //load catId2inx
         HashMap<String,String> catId2inx = new HashMap<String, String>();
+        HashMap<String,Integer> catSalesRank = new HashMap<String, Integer>();
         for(int i=numMerchant+numBrand;i<numMerchant+numBrand+numCat;i++){
         	String[] strs = auxilary_data.get(i).split(",");
         	catId2inx.put(strs[0], strs[1]);
+        	catSalesRank.put(strs[1], Integer.parseInt(strs[2]));
         }
         //load merchant cat
         HashMap<String,HashSet<String>> merchant_cat = new HashMap<String, HashSet<String>>();
@@ -1363,7 +1370,7 @@ public class FE_Extractor {
 //        HashMap<String,String> uf_map = extractUserFeature4dummy(data_raw_list);
         HashMap<String,String> uf_map = extractUserFeature(data_raw_list,brandId2inx,catId2inx);
         //stat user buy cat
-//        HashMap<String,HashSet<String>> user_cat = statUserBuyCat(data_raw_list, catId2inx);
+        HashMap<String,HashSet<String>> user_cat = statUserBuyCat(data_raw_list, catId2inx);
         //stat user buy brand
         HashMap<String,HashSet<String>> user_brand = statUserBuyBrand(data_raw_list, brandId2inx);
         //stat UB weight
@@ -1384,12 +1391,12 @@ public class FE_Extractor {
                 d2.merchant_id = d.merchant_id;
 //                d2.features = activity_log2feature4dummy(0,d.merchant_id,d.activity_log,brandId2inx,catId2inx);
                 d2.features = activity_log2feature(0,d.merchant_id,d.age_range,d.gender,d.activity_log,brandId2inx,catId2inx);
-//                String ucmc = ucatUmcat(d.user_id, d.merchant_id, user_cat, merchant_cat);
+                String ucmc = ucatUmcat(d.user_id, d.merchant_id, user_cat, merchant_cat);
                 String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
                 //use ub weight
 //                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
-//                if(!ucmc.equals(""))
-//                	d2.features += "," + ucmc;
+                if(!ucmc.equals(""))
+                	d2.features += "," + ucmc;
                 if(!ubmb.equals(""))
                 	d2.features += "," + ubmb;
 //                String ubw = dummyUBweight(d,ub_weight_map,brandId2inx);

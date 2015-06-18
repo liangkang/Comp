@@ -162,8 +162,26 @@ public class FE_Extractor {
         			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
         			count++;
         		}
-        
-        
+        map.put("umBuyBInOtherM", count);
+        count++;
+        map.put("umBuyCInOtherM", count);
+        count++;
+        map.put("umBuyBNotInOtherM", count);
+        count++;
+        map.put("umBuyCNotInOtherM", count);
+        count++;
+        map.put("umBuyBInOtherM/N", count);
+        count++;
+        map.put("umBuyCInOtherM/N", count);
+        count++;
+        map.put("umBuyBNotInOtherM/N", count);
+        count++;
+        map.put("umBuyCNotInOtherM/N", count);
+        count++;
+        map.put("umBuyBInOtherMC", count);
+        count++;
+        map.put("umBuyCInOtherMC", count);
+        count++;
         
         //user feature index
         for(int month=5;month<=11;month++)
@@ -190,6 +208,7 @@ public class FE_Extractor {
 //        		map.put("u|db11|"+action+"|"+st, count);
 //        		count++;
 //        	}
+        // log type
         int [] userAlldayLogType = {2,4,6,7,8,11,12,13,15};
         int [] userMonthLogType = {2,4};
         for(int month=5;month<=11;month++)
@@ -257,7 +276,8 @@ public class FE_Extractor {
         count++;
         map.put("m"+"0"+"|"+"8", count);
         count++;
-        map.put("m"+"0"+"|"+"24", count);
+//        map.put("m"+"0"+"|"+"24", count);
+//        count++;
         for (int month=5;month<=11;month++)
         	for (int action=0;action<=3;action++)
         		for (int stat_type=0;stat_type<=5;stat_type++){
@@ -295,12 +315,20 @@ public class FE_Extractor {
 //        	map.put("m0BuyGen|"+gender, count);
 //        	count++;
 //        }
+        // 617 how many sales rankTopK(5,10) b,c in merchant
+//        int [] rt = {5,10};
+//        for(int k : rt){
+//        	map.put("mbRank|"+k, count);
+//        	count++;
+//        }
+//        for(int k :rt){
+//        	map.put("mcRank|"+k, count);
+//        	count++;
+//        }
         
         return map;
     }
 
- 
-    
     public static String dummyCoding4Count(int x, String key, int minL, int maxR) {
 		String feat = "";
 		for(int i=minL;i<=maxR;i++){
@@ -310,9 +338,6 @@ public class FE_Extractor {
 		return feat;
 	}
     
-
-    
-
     // um特征提取
     public static String activity_log2feature(int rank,String merchant_id, String age, String gender,String activitiy_log, HashMap<String,String> brandid2inx, HashMap<String,String> catid2inx){
         String feature="";
@@ -344,8 +369,10 @@ public class FE_Extractor {
                 String brand = strs2[2];
                 String cat = strs2[1];
                 if(strs2[4].equals("2")){
-                	feature += "bid"+"|"+brandid2inx.get(brand)+":"+1+",";
-                	feature += "cid"+"|"+catid2inx.get(cat)+":"+1+",";
+                	if(brandid2inx.containsKey(brand))
+                		feature += "bid"+"|"+brandid2inx.get(brand)+":"+1+",";
+                	if(catid2inx.containsKey(cat))
+                		feature += "cid"+"|"+catid2inx.get(cat)+":"+1+",";
                 }
                 if (month==11&&day>11)
                 	day = 11;
@@ -564,8 +591,10 @@ public class FE_Extractor {
 	                if (month==11&&day>11)
 	                	day = 11;
 	                if(strs2[4].equals("2")){
-	                	mbc_id += "u|bid|b"+"|"+brandid2inx.get(brand)+":"+1+",";
-	                	mbc_id += "u|cid|b"+"|"+catid2inx.get(cat)+":"+1+",";
+	                	if(brandid2inx.containsKey(brand))
+	                		mbc_id += "u|bid|b"+"|"+brandid2inx.get(brand)+":"+1+",";
+	                	if(catid2inx.containsKey(cat))
+	                		mbc_id += "u|cid|b"+"|"+catid2inx.get(cat)+":"+1+",";
 	                }
 	                //String item = strs2[0];
 	                // 用户整个时间段|行为 计数
@@ -872,6 +901,78 @@ public class FE_Extractor {
         feature += merchant_id+":"+"1";
         return feature;
     }
+    // u双11在m购买的b/c有多少在其他点有销售
+    public static String umBuyBCInOtherM(FE_Data_Raw d,HashMap<String,HashSet<String>> merchant_cat,HashMap<String,HashSet<String>> merchant_brand,HashMap<String,String> catid2inx,HashMap<String,String> brandid2inx) {
+		String feature = "";
+		String [] strs = d.activity_log.split("#");
+		HashSet<String> umBuyBrand = new HashSet<String>();
+		HashSet<String> umBuyCat = new HashSet<String>();
+		for(int i=0;i<strs.length;i++){
+			String [] strs2 = strs[i].split(":");
+			if(strs2.length==5&&brandid2inx.containsKey(strs2[2])&&catid2inx.containsKey(strs2[1])){
+				String bid = brandid2inx.get(strs2[2]);
+				String cid = catid2inx.get(strs2[1]);
+				umBuyBrand.add(bid);
+				umBuyCat.add(cid);
+			}
+		}
+		int brandC = 0;
+		int catC = 0;
+		int brandMC = 0;
+		int catMC = 0;
+		for(Map.Entry<String, HashSet<String>> entry : merchant_brand.entrySet()){
+			if(!entry.getKey().equals(d.merchant_id)){
+				HashSet<String> union = new HashSet<String>();
+				union.addAll(umBuyBrand);
+				union.retainAll(entry.getValue());
+				int x = union.size();
+				if(x>brandC)
+					brandC = x;
+				if(x!=0)
+					brandMC++;
+			}
+		}
+		for(Map.Entry<String, HashSet<String>> entry : merchant_cat.entrySet()){
+			if(!entry.getKey().equals(d.merchant_id)){
+				HashSet<String> union = new HashSet<String>();
+				union.addAll(umBuyCat);
+				union.retainAll(entry.getValue());
+				int x = union.size();
+				if(x>catC)
+					catC = x;
+				if(x!=0)
+					catMC++;
+			}
+		}
+		// 有销售
+		if(brandC!=0){
+			feature += "umBuyBInOtherM"+":"+Math.log(brandC+1)+",";
+			feature += "umBuyBInOtherM/N"+":"+(double)brandC/umBuyBrand.size()+",";
+		}
+		if(catC!=0){
+			feature += "umBuyCInOtherM"+":"+Math.log(catC+1)+",";
+			feature += "umBuyCInOtherM/N"+":"+(double)catC/umBuyCat.size()+",";
+		}
+		// 没销售
+		if(umBuyBrand.size()-brandC>0){
+			feature += "umBuyBNotInOtherM"+":"+Math.log(umBuyBrand.size()-brandC+1)+",";
+			feature += "umBuyBNotInOtherM/N"+":"+(double)(umBuyBrand.size()-brandC)/umBuyBrand.size()+",";
+		}
+		if(umBuyCat.size()-catC>0){
+			feature += "umBuyCNotInOtherM"+":"+Math.log(umBuyCat.size()-catC+1)+",";
+			feature += "umBuyCNotInOtherM"+":"+(double)(umBuyCat.size()-catC)/umBuyCat.size()+',';
+		}
+		// 有多少m有销售
+		if(brandMC!=0)
+			feature += "umBuyBInOtherMC"+":"+Math.log(brandMC+1)+",";
+		if(catMC!=0)
+			feature += "umBuyCInOtherMC"+":"+Math.log(catMC+1)+",";
+		if(!feature.equals(""))
+			feature = feature.substring(0,feature.length()-1);
+		return feature;
+	}
+    
+    
     
     // 最喜爱的TOPK品牌/类目有多少个在merchant里有交互/买过 615
     public static String extractUserTopKfeature(int rank,FE_Data_Raw d, HashMap<String,String> catid2inx,HashMap<String,String> brandid2inx, HashMap<String,HashSet<String>> userTopKCat, HashMap<String,HashSet<String>> userTopKBrand, int K) {
@@ -883,16 +984,18 @@ public class FE_Extractor {
 		HashSet<String> userTopKBuyBrandInM = new HashSet<String>();
 		for(int i=0;i<strs.length;i++){
 			String []strs2 = strs[i].split(":");
-			String bid = brandid2inx.get(strs2[2]);
-            String cid = catid2inx.get(strs2[1]);
-            if(strs2.length==5) {
-            	userTopKBehCatInM.add(cid);
-            	userTopKBehBrandInM.add(bid);
-            	if(strs2[4].equals("2")){
-            		userTopKBuyCatInM.add(cid);
-            		userTopKBuyBrandInM.add(bid);
-            	}
-            }
+			if(strs2.length==5&&brandid2inx.containsKey(strs2[2])&&catid2inx.containsKey(strs2[1])){
+				String bid = brandid2inx.get(strs2[2]);
+				String cid = catid2inx.get(strs2[1]);
+				if(strs2.length==5) {
+					userTopKBehCatInM.add(cid);
+					userTopKBehBrandInM.add(bid);
+					if(strs2[4].equals("2")){
+						userTopKBuyCatInM.add(cid);
+						userTopKBuyBrandInM.add(bid);
+					}
+				}
+			}
 		}
 		//cat交互
 		HashSet<String> union = new HashSet<String>();
@@ -941,7 +1044,7 @@ public class FE_Extractor {
     		TreeMap<String, Double> cat_count_map = userBehCatCount.get(d.user_id);
     		for(int k=0;k<strs.length;k++){
     			String []strs2 = strs[k].split(":");
-	            if (strs2.length==5){
+	            if (strs2.length==5&&catid2inx.containsKey(strs2[1])){
 	            	String cid = catid2inx.get(strs2[1]);
 	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
     				int day = Integer.parseInt(strs2[3].substring(2,4));
@@ -1011,7 +1114,7 @@ public class FE_Extractor {
     		TreeMap<String, Double> brand_count_map = userBehBrandCount.get(d.user_id);
     		for(int k=0;k<strs.length;k++){
     			String []strs2 = strs[k].split(":");
-	            if (strs2.length==5){
+	            if (strs2.length==5&&brandid2inx.containsKey(strs2[2])){
 	            	String bid = brandid2inx.get(strs2[2]);
 	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
     				int day = Integer.parseInt(strs2[3].substring(2,4));
@@ -1185,6 +1288,7 @@ public class FE_Extractor {
 		for(String cat : union){
 			feature += "umc|" + cat +":"+"1"+ ",";
 		}
+		
 		if(!feature.equals(""))
 			feature = feature.substring(0,feature.length()-1);
 		return feature;
@@ -1289,6 +1393,46 @@ public class FE_Extractor {
 			feat = feat.substring(0,feat.length()-1);
 		return feat;
 	}
+    
+    public static String numOfMSalesBrand(String merchant, HashMap<String,HashSet<String>> merchant_brand, HashMap<String,Integer> brand_rank) {
+		String feature = "";
+		HashSet<String> mbrand = merchant_brand.get(merchant);
+		int c5 = 0;
+		int c10 = 0;
+		for(String bid : mbrand){
+			if(brand_rank.get(bid)<5)
+				c5++;
+			if(brand_rank.get(bid)<10)
+				c10++;
+		}
+		if(c5>0)
+			feature += "mbRank|5"+":"+Math.log(c5+1)+",";
+		if(c10>0)
+			feature += "mbRank|10"+":"+Math.log(c10+1)+",";
+		if(!feature.equals(""))
+			feature = feature.substring(0,feature.length()-1);
+		return feature;
+	}
+    
+    public static String numOfMSalesCat(String merchant, HashMap<String,HashSet<String>> merchant_cat, HashMap<String,Integer> cat_rank) {
+		String feature = "";
+		HashSet<String> mbrand = merchant_cat.get(merchant);
+		int c5 = 0;
+		int c10 = 0;
+		for(String cid : mbrand){
+			if(cat_rank.get(cid)<5)
+				c5++;
+			if(cat_rank.get(cid)<10)
+				c10++;
+		}
+		if(c5>0)
+			feature += "mcRank|5"+":"+Math.log(c5+1)+",";
+		if(c10>0)
+			feature += "mcRank|10"+":"+Math.log(c10+1)+",";
+		if(!feature.equals(""))
+			feature = feature.substring(0,feature.length()-1);
+		return feature;
+	}
 
     //convert the data of format 2 to your desire format,
     //data_raw_list the list of raw data
@@ -1321,19 +1465,19 @@ public class FE_Extractor {
         
         //load brandId2inx
         HashMap<String,String> brandId2inx = new HashMap<String, String>();
-        HashMap<String,Integer> brandSalesRank = new HashMap<String, Integer>();
+//        HashMap<String,Integer> brandSalesRank = new HashMap<String, Integer>();
         for(int i=numMerchant;i<numMerchant+numBrand;i++){
         	String [] strs = auxilary_data.get(i).split(",");
         	brandId2inx.put(strs[0], strs[1]);
-        	brandSalesRank.put(strs[1], Integer.parseInt(strs[2]));
+//        	brandSalesRank.put(strs[1], Integer.parseInt(strs[2]));
         }
         //load catId2inx
         HashMap<String,String> catId2inx = new HashMap<String, String>();
-        HashMap<String,Integer> catSalesRank = new HashMap<String, Integer>();
+//        HashMap<String,Integer> catSalesRank = new HashMap<String, Integer>();
         for(int i=numMerchant+numBrand;i<numMerchant+numBrand+numCat;i++){
         	String[] strs = auxilary_data.get(i).split(",");
         	catId2inx.put(strs[0], strs[1]);
-        	catSalesRank.put(strs[1], Integer.parseInt(strs[2]));
+//        	catSalesRank.put(strs[1], Integer.parseInt(strs[2]));
         }
         //load merchant cat
         HashMap<String,HashSet<String>> merchant_cat = new HashMap<String, HashSet<String>>();
@@ -1366,6 +1510,31 @@ public class FE_Extractor {
         }
 //      System.out.println(merchant_feature.size());
         
+        //load merchant brand stat
+//        HashMap<String,HashMap<String,HashMap<String,Integer>>> merchant_brand_stat = new HashMap<String, HashMap<String,HashMap<String,Integer>>>();
+//        for(int i=numMerchant*4+numBrand+numCat;i<numMerchant*5+numBrand+numCat;i++){
+//        	String [] strs = auxilary_data.get(i).split("@");
+//        	String merchant = strs[0];
+//        	String [] bstrs = strs[1].split(",");
+//        	HashMap<String,HashMap<String,Integer>> brand_stat = new HashMap<String, HashMap<String,Integer>>();
+//        	for(int k=0;k<bstrs.length;k++){
+//        		String bid = brandId2inx.get(bstrs[k].split(":")[0]);
+//        		String [] bks = bstrs[k].split(":")[1].substring(1,bstrs[k].length()-1).split(",");
+//        		if(!brand_stat.containsKey(bid)){
+//        			HashMap<String,Integer> st = new HashMap<String, Integer>();
+//        			brand_stat.put(bid, st);
+//        		}
+//        		HashMap<String,Integer> st = brand_stat.get(bid);
+//        		for(int t=0;t<bks.length;t++){
+//        			String key = bks[t].split(":")[0];
+//        			int val = Integer.parseInt(bks[t].split(":")[1]);
+//        			st.put(key, val);
+//        		}
+//        		brand_stat.put(bid, st);
+//        	}
+//        	merchant_brand_stat.put(merchant, brand_stat);
+//        }
+        
         //extract user feature
 //        HashMap<String,String> uf_map = extractUserFeature4dummy(data_raw_list);
         HashMap<String,String> uf_map = extractUserFeature(data_raw_list,brandId2inx,catId2inx);
@@ -1391,6 +1560,9 @@ public class FE_Extractor {
                 d2.merchant_id = d.merchant_id;
 //                d2.features = activity_log2feature4dummy(0,d.merchant_id,d.activity_log,brandId2inx,catId2inx);
                 d2.features = activity_log2feature(0,d.merchant_id,d.age_range,d.gender,d.activity_log,brandId2inx,catId2inx);
+                String umBuyBCInOtherM = umBuyBCInOtherM(d, merchant_cat, merchant_brand, catId2inx, brandId2inx);
+                if(!umBuyBCInOtherM.equals(""))
+                	d2.features += "," + umBuyBCInOtherM;
                 String ucmc = ucatUmcat(d.user_id, d.merchant_id, user_cat, merchant_cat);
                 String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
                 //use ub weight
@@ -1445,6 +1617,14 @@ public class FE_Extractor {
                 
                 //add merchant feature
                 d2.features += "," + merchant_feature.get(d.merchant_id);
+                //how many sales rankTopK(5,10) b,c in merchant
+//                String rtb = numOfMSalesBrand(d.merchant_id, merchant_brand, brandSalesRank);
+//                if(!rtb.equals(""))
+//                	d2.features += "," + rtb;
+//                String rtc = numOfMSalesCat(d.merchant_id, merchant_cat, catSalesRank);
+//                if(!rtc.equals(""))
+//                	d2.features += "," + rtc;
+                
                 data_list.add(d2);
             }
         }

@@ -2,6 +2,7 @@ package Training.Customized;
 
 import no.uib.cipr.matrix.DenseVector;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,8 +45,11 @@ public class Training_Master {
 		String str = "";
 		double t = 0;
 		for (int i = 0; i < vec.size() - 1; i++) {
-			t = (Math.round(vec.get(i) * 10000000) / 10000000.0);
-			str += String.valueOf(t) + ",";
+//			t = (Math.round(vec.get(i) * 10000000) / 10000000.0);
+			BigDecimal ts = new BigDecimal(vec.get(i));
+			
+//			str += String.valueOf(ts) + ",";
+			str += ts.toString()+",";
 		}
 		t = (Math.round(vec.get(vec.size() - 1) * 10000000) / 10000000.0);
 		str += String.valueOf(t);

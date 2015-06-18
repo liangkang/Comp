@@ -38,7 +38,7 @@ public class FE_Extractor {
 	static int numMerchant = 4995;
 	static int numBrand = 8443;
 	static int numCat = 1511;
-
+	static int numItem = 1090071;
 	// old map
 
     public static HashMap<String,Integer> mapping()
@@ -63,6 +63,11 @@ public class FE_Extractor {
         for(int i=0;i<numCat;i++)
         	map.put("umc|"+i, count+i);
         count += numCat;
+        
+        //UM item dummy
+//        for(int i=0;i<numItem;i++)
+//        	map.put("iid|"+i, count+i);
+//        count += numItem;
         
         //UB weight
 //        for(int i=0;i<numBrand;i++)
@@ -162,26 +167,27 @@ public class FE_Extractor {
         			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
         			count++;
         		}
-        map.put("umBuyBInOtherM", count);
-        count++;
-        map.put("umBuyCInOtherM", count);
-        count++;
-        map.put("umBuyBNotInOtherM", count);
-        count++;
-        map.put("umBuyCNotInOtherM", count);
-        count++;
-        map.put("umBuyBInOtherM/N", count);
-        count++;
-        map.put("umBuyCInOtherM/N", count);
-        count++;
-        map.put("umBuyBNotInOtherM/N", count);
-        count++;
-        map.put("umBuyCNotInOtherM/N", count);
-        count++;
-        map.put("umBuyBInOtherMC", count);
-        count++;
-        map.put("umBuyCInOtherMC", count);
-        count++;
+        
+//        map.put("umBuyBInOtherM", count);
+//        count++;
+//        map.put("umBuyCInOtherM", count);
+//        count++;
+//        map.put("umBuyBNotInOtherM", count);
+//        count++;
+//        map.put("umBuyCNotInOtherM", count);
+//        count++;
+//        map.put("umBuyBInOtherM/N", count);
+//        count++;
+//        map.put("umBuyCInOtherM/N", count);
+//        count++;
+//        map.put("umBuyBNotInOtherM/N", count);
+//        count++;
+//        map.put("umBuyCNotInOtherM/N", count);
+//        count++;
+//        map.put("umBuyBInOtherMC", count);
+//        count++;
+//        map.put("umBuyCInOtherMC", count);
+//        count++;
         
         //user feature index
         for(int month=5;month<=11;month++)
@@ -296,6 +302,12 @@ public class FE_Extractor {
         		count++;
         	}
         
+        // 618
+//        map.put("mLabelC", count);
+//        count++;
+//        map.put("mLabelC/N",count);
+//        count++;
+        
         // 611
 //        for (int action=0;action<=3;action++)
 //        	for (int stat_type=16;stat_type<=17;stat_type++){
@@ -368,6 +380,7 @@ public class FE_Extractor {
                 int day = Integer.parseInt(strs2[3].substring(2,4));
                 String brand = strs2[2];
                 String cat = strs2[1];
+                String item = strs2[0];
                 if(strs2[4].equals("2")){
                 	if(brandid2inx.containsKey(brand))
                 		feature += "bid"+"|"+brandid2inx.get(brand)+":"+1+",";
@@ -376,7 +389,7 @@ public class FE_Extractor {
                 }
                 if (month==11&&day>11)
                 	day = 11;
-                String item = strs2[0];
+//                String item = strs2[0];
                 // 双11当天|行为 数量
                 if (month==11&&day==11){
                 	if (map_db_c.containsKey("db11|"+strs2[4])){
@@ -595,6 +608,7 @@ public class FE_Extractor {
 	                		mbc_id += "u|bid|b"+"|"+brandid2inx.get(brand)+":"+1+",";
 	                	if(catid2inx.containsKey(cat))
 	                		mbc_id += "u|cid|b"+"|"+catid2inx.get(cat)+":"+1+",";
+	                	
 	                }
 	                //String item = strs2[0];
 	                // 用户整个时间段|行为 计数
@@ -1502,12 +1516,29 @@ public class FE_Extractor {
         	merchant_brand.put(strs[0], brand_set);
         }
         
+        
         //load merchant feature
         HashMap<String,String> merchant_feature = new HashMap<String, String>();
         for(int i=numMerchant*3+numBrand+numCat;i<numMerchant*4+numBrand+numCat;i++){
         	String [] strs = auxilary_data.get(i).split("@");
         	merchant_feature.put(strs[0], strs[1]);
         }
+        //load item idx
+//        HashMap<String,String> itemId2inx = new HashMap<String, String>();
+//        for(int i=numMerchant*4+numBrand+numCat;i<numMerchant*4+numBrand+numCat+numItem;i++){
+//        	String [] strs = auxilary_data.get(i).split(",");
+//        	itemId2inx.put(strs[0], strs[1]);
+//        }
+        
+        //load merchant label count
+//        HashMap<String,Integer> merchant_label_count = new HashMap<String, Integer>();
+//        HashMap<String,Integer> merchant_count = new HashMap<String, Integer>();
+//        for(int i=numMerchant*4+numBrand+numCat;i<numMerchant*5+numBrand+numCat;i++){
+//        	String [] strs = auxilary_data.get(i).split(",");
+//        	merchant_label_count.put(strs[0], Integer.parseInt(strs[1]));
+//        	merchant_count.put(strs[0], Integer.parseInt(strs[2]));
+//        }
+        
 //      System.out.println(merchant_feature.size());
         
         //load merchant brand stat
@@ -1560,9 +1591,9 @@ public class FE_Extractor {
                 d2.merchant_id = d.merchant_id;
 //                d2.features = activity_log2feature4dummy(0,d.merchant_id,d.activity_log,brandId2inx,catId2inx);
                 d2.features = activity_log2feature(0,d.merchant_id,d.age_range,d.gender,d.activity_log,brandId2inx,catId2inx);
-                String umBuyBCInOtherM = umBuyBCInOtherM(d, merchant_cat, merchant_brand, catId2inx, brandId2inx);
-                if(!umBuyBCInOtherM.equals(""))
-                	d2.features += "," + umBuyBCInOtherM;
+//                String umBuyBCInOtherM = umBuyBCInOtherM(d, merchant_cat, merchant_brand, catId2inx, brandId2inx);
+//                if(!umBuyBCInOtherM.equals(""))
+//                	d2.features += "," + umBuyBCInOtherM;
                 String ucmc = ucatUmcat(d.user_id, d.merchant_id, user_cat, merchant_cat);
                 String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
                 //use ub weight
@@ -1624,6 +1655,12 @@ public class FE_Extractor {
 //                String rtc = numOfMSalesCat(d.merchant_id, merchant_cat, catSalesRank);
 //                if(!rtc.equals(""))
 //                	d2.features += "," + rtc;
+                //merchant label count/part
+//                int mlc = merchant_label_count.get(d.merchant_id);
+//                if(mlc!=0){
+//                	d2.features += "," + "mLabelC"+":"+Math.log(mlc);
+//                	d2.features += "," + "mLabelC/N"+":"+(double)mlc/merchant_count.get(d.merchant_id);
+//                }
                 
                 data_list.add(d2);
             }

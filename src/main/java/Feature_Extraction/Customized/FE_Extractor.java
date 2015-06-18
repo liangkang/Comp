@@ -960,7 +960,7 @@ public class FE_Extractor {
 		}
 		if(umBuyCat.size()-catC>0){
 			feature += "umBuyCNotInOtherM"+":"+Math.log(umBuyCat.size()-catC+1)+",";
-			feature += "umBuyCNotInOtherM"+":"+(double)(umBuyCat.size()-catC)/umBuyCat.size()+',';
+			feature += "umBuyCNotInOtherM/N"+":"+(double)(umBuyCat.size()-catC)/umBuyCat.size()+',';
 		}
 		// 有多少m有销售
 		if(brandMC!=0)

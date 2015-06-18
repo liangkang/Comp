@@ -46,7 +46,7 @@ public class Training_Master {
 		double t = 0;
 		for (int i = 0; i < vec.size() - 1; i++) {
 //			t = (Math.round(vec.get(i) * 10000000) / 10000000.0);
-			BigDecimal ts = new BigDecimal(vec.get(i));
+			BigDecimal ts = new BigDecimal(vec.get(i)+"");
 			
 //			str += String.valueOf(ts) + ",";
 			str += ts.toString()+",";

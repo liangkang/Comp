@@ -3,6 +3,7 @@ package Feature_Extraction.Customized;
 import Feature_Extraction.Predefined.FE_Data_Processed;
 import Feature_Extraction.Predefined.FE_Data_Raw;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -23,6 +24,7 @@ class userStat{
 	HashMap<String,HashSet<String>> map_all_m3;
 	HashMap<String,HashSet<Date>> map_all_d;
 	HashMap<String,Integer> map_db_c;
+	// public HashMap<String, int[]> map_all_m_action;//lk_1
 	public  userStat(String user) {
 		this.user = user;
 	}
@@ -38,7 +40,8 @@ public class FE_Extractor {
 	static int numMerchant = 4995;
 	static int numBrand = 8443;
 	static int numCat = 1511;
-	static int numItem = 1090071;
+//	static int numItem = 1090071;
+	static int maxCatId = 1113166;
 	// old map
 
     public static HashMap<String,Integer> mapping()
@@ -61,8 +64,13 @@ public class FE_Extractor {
         count += numBrand;
         
         for(int i=0;i<numCat;i++)
-        	map.put("umc|"+i, count+i);
+       	    map.put("umc|"+i, count+i);
         count += numCat;
+        
+        //UM itemid dummy
+        for(int i=1;i<=maxCatId;i++)
+        	map.put("iid|"+i, count+i-1);
+        count += maxCatId;
         
         //UM item dummy
 //        for(int i=0;i<numItem;i++)
@@ -167,6 +175,22 @@ public class FE_Extractor {
         			map.put(rank+"|"+"0"+"|"+action+"|"+st+"l", count);
         			count++;
         		}
+        //sqrt type
+//        int [] umSqrtType = {0,1,3};
+//        for(int rank=0;rank<=simNum;rank++)
+//            for(int month=5;month<=11;month++)
+//                for(int action=0;action<=3;action++)
+//                	for(int st : umSqrtType){
+//                		map.put(rank+"|"+month+"|"+action+"|"+st+"s",count);
+//                		count++;
+//                	}
+//        for(int rank=0;rank<=simNum;rank++)
+//        	for(int action=0;action<=3;action++)
+//        		for(int st : umSqrtType)
+//        		{
+//        			map.put(rank+"|"+"0"+"|"+action+"|"+st+"s", count);
+//        			count++;
+//        		}
         
 //        map.put("umBuyBInOtherM", count);
 //        count++;
@@ -246,31 +270,19 @@ public class FE_Extractor {
         	map.put("u|gender|"+gender, count);
         	count++;
         }
-//        for (int age=1;age<=8;age++)
-//        	for(int gender=0;gender<=1;gender++){
-//        		map.put("u|a|g|"+age+"|"+gender, count);
-//        		count++;
-//        	}
-        //用户age*gender*mid index
-//        for (int age=0;age<=8;age++)
-//        	for(int gender=0;gender<=2;gender++)
-//        		for(int m=1;m<=4995;m++)
-//        		{
-//        			map.put("u|a|g|m|"+age+"|"+gender+"|"+m, count);
-//        			count++;
-//        		}
-        
-        //用户some feature*age*gender
-//        for(int action=0;action<=3;action++)
-//        	for(int age=0;age<=8;age++)
-//        		for(int gender=0;gender<=2;gender++)
-//        			for(int stat_type=0;stat_type<=15;stat_type++){
-//        				if(stat_type==6&&action==2){
-//        					continue;
-//        				}
-//        				map.put("u|ag|"+age+"|"+gender+"|"+"0"+"|"+action+"|"+stat_type, count);
-//        				count++;
-//        			}
+		
+		//Yj
+        // map.put("last3daycount", count);
+        // count ++;
+        // map.put("last3dayclickcount", count);
+        // count ++;
+        // map.put("last3daystorecount", count);
+        // count ++;
+        // map.put("last3daybuycount", count);
+        // count ++;
+        // map.put("last3daycartcount", count);
+        // count ++;
+
         
         //merchant特征
         for (int action=0;action<=3;action++)
@@ -301,6 +313,41 @@ public class FE_Extractor {
         		map.put("m"+"0"+"|"+action+"|"+stat_type, count);
         		count++;
         	}
+        
+
+        
+        //lk_1:mapping()
+        //um_feature:
+        // for(int action=0;action<=3;action++)
+        //     for(int time_slot=0; time_slot<=5; time_slot++) {
+        //         map.put("0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+time_slot, count);
+        //         count++;
+        //     }
+        // map.put("0|favourite_after_buy",count);
+        // count++;
+        // map.put("0|circle_index", count);
+        // count++;
+
+        // //u_feature:
+        // map.put("u"+"0"+"|"+"FG0_everyday_click", count);
+        // count++;
+        // map.put("u"+"0"+"|"+"FG0_everyday_buy", count);
+        // count++;
+        // map.put("u0|"+"FG0_m_max_click", count);
+        // count++;
+        // map.put("u0|"+"FG0_m_max_buy", count);
+        // count++;
+        // map.put("u0|"+"FG0_every_m_click", count);
+        // count++;
+        // map.put("u0|"+"FG0_every_m_buy", count);
+        // count++;
+        // map.put("u0|"+"FG0_buy_action_pro", count);
+        // count++;
+        // map.put("u0|"+"FG0_buy_m_pro", count);
+        // count++;
+        //lk_1:mapping()
+        
+        
         
         // 618
 //        map.put("mLabelC", count);
@@ -373,6 +420,11 @@ public class FE_Extractor {
         HashMap<String,HashSet<String>> map_all_i = new HashMap<String, HashSet<String>>();
         // double11|act: count
         HashMap<String,Integer> map_db_c = new HashMap<String, Integer>();
+        //lk_1:activity_log2feature
+        // HashMap<String,Integer> map_all_c_FGroup = new HashMap<String, Integer>();
+        // HashMap<String,HashSet<Integer>> map_all_mon = new HashMap<String, HashSet<Integer>>();
+        //lk_1:activity_log2feature
+        
         for(int i=0;i<strs.length;i++){
             String []strs2 = strs[i].split(":");
             if(strs2.length==5) {
@@ -381,11 +433,13 @@ public class FE_Extractor {
                 String brand = strs2[2];
                 String cat = strs2[1];
                 String item = strs2[0];
+                String action = strs2[4];
                 if(strs2[4].equals("2")){
                 	if(brandid2inx.containsKey(brand))
                 		feature += "bid"+"|"+brandid2inx.get(brand)+":"+1+",";
                 	if(catid2inx.containsKey(cat))
                 		feature += "cid"+"|"+catid2inx.get(cat)+":"+1+",";
+//                	feature += "iid|"+item+":"+1+",";
                 }
                 if (month==11&&day>11)
                 	day = 11;
@@ -452,17 +506,82 @@ public class FE_Extractor {
                 	set_dat.add(dat);
                 	map_all_dat.put("0" + "|" +strs2[4],set_dat);
                 }
+                // lk_1
+                // 统计每个时间间隙|行为数
+                // Date date1 = new Date(2014, month, day);
+                // int intervals =(int) (date1.getTime()/86400000 - last_day.getTime()/86400000);
+                // if (intervals <= 1) {
+                //     String FGroup_key = "0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+0;
+                //     if (map_all_c_FGroup.containsKey(FGroup_key)){
+                //         map_all_c_FGroup.put(FGroup_key, map_all_c_FGroup.get(FGroup_key) + 1);
+                //     } else {
+                //         map_all_c_FGroup.put(FGroup_key, 1);
+                //     }
+                // }
+                // if (intervals <= 7) {
+                //     String FGroup_key = "0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+1;
+                //     if (map_all_c_FGroup.containsKey(FGroup_key)){
+                //         map_all_c_FGroup.put(FGroup_key, map_all_c_FGroup.get(FGroup_key) + 1);
+                //     } else {
+                //         map_all_c_FGroup.put(FGroup_key, 1);
+                //     }
+                // }
+                // if (intervals <= 15) {
+                //     String FGroup_key = "0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+2;
+                //     if (map_all_c_FGroup.containsKey(FGroup_key)){
+                //         map_all_c_FGroup.put(FGroup_key, map_all_c_FGroup.get(FGroup_key) + 1);
+                //     } else {
+                //         map_all_c_FGroup.put(FGroup_key, 1);
+                //     }
+                // }
+                // if (intervals <= 30) {
+                //     String FGroup_key = "0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+3;
+                //     if (map_all_c_FGroup.containsKey(FGroup_key)){
+                //         map_all_c_FGroup.put(FGroup_key, map_all_c_FGroup.get(FGroup_key) + 1);
+                //     } else {
+                //         map_all_c_FGroup.put(FGroup_key, 1);
+                //     }
+                // }
+                // if (intervals <= 60) {
+                //     String FGroup_key = "0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+4;
+                //     if (map_all_c_FGroup.containsKey(FGroup_key)){
+                //         map_all_c_FGroup.put(FGroup_key, map_all_c_FGroup.get(FGroup_key) + 1);
+                //     } else {
+                //         map_all_c_FGroup.put(FGroup_key, 1);
+                //     }
+                // }
+                // if (intervals <= 120) {
+                //     String FGroup_key = "0"+"|"+action+"|"+"FG0_TimeSlot"+"|"+5;
+                //     if (map_all_c_FGroup.containsKey(FGroup_key)){
+                //         map_all_c_FGroup.put(FGroup_key, map_all_c_FGroup.get(FGroup_key) + 1);
+                //     } else {
+                //         map_all_c_FGroup.put(FGroup_key, 1);
+                //     }
+                // }
+
+                // // 统计整个时间段|行为 date
+                // if (map_all_mon.containsKey("0"+"|"+action)) {
+                //     map_all_mon.get("0"+"|"+action).add(month);
+                // } else{
+                //     HashSet<Integer> month_set = new HashSet<Integer>();
+                //     map_all_mon.put("0" + "|" + action, month_set);
+                // }
+                // lk_1
             }
         }
         for(Map.Entry<String,Integer> entry: map_all_c.entrySet()){
         	// 整个时间段行为数
             feature += rank+"|"+entry.getKey()+"|0"+":"+Math.log((double)entry.getValue()+1)+",";
+            // 整个时间段行为数sqrt
+//            feature += rank+"|"+entry.getKey()+"|0s"+":"+Math.sqrt((double)entry.getValue())+",";
             // *age*gender
 //            feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|0"+":"+Math.log((double)entry.getValue()+1)+",";
         }
         for(Map.Entry<String,HashSet<Date>> entry: map_all_dat.entrySet()){
         	// 整个时间段行为天数
             feature += rank+"|"+entry.getKey()+"|1"+":"+Math.log((double)entry.getValue().size()+1)+",";
+            // 整个时间段行为天数sqrt
+//            feature += rank+"|"+entry.getKey()+"|1s"+":"+Math.sqrt((double)entry.getValue().size())+",";
             // *age*gender
 //            feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|1"+":"+Math.log((double)entry.getValue().size()+1)+",";
             // 整个时间段行为数/行为天数
@@ -475,6 +594,8 @@ public class FE_Extractor {
         for(Map.Entry<String, HashSet<String>> entry: map_all_i.entrySet()){
         	// 整个时间段行为产品数
         	feature += rank+"|"+entry.getKey()+"|3"+":"+Math.log((double)entry.getValue().size()+1)+",";
+        	// 整个时间段行为产品数
+//        	feature += rank+"|"+entry.getKey()+"|3s"+":"+Math.sqrt((double)entry.getValue().size())+",";
         	// *age*gender
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|3"+":"+Math.log((double)entry.getValue().size()+1)+",";
         	// 整个时间段行为产品数/行为数
@@ -483,6 +604,14 @@ public class FE_Extractor {
 //        	feature += "ag|"+rank+"|"+age+"|"+gender+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map_all_c.get(entry.getKey())+",";
 //        	 整个时间段行为产品数/行为数log
         	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map_all_c.get(entry.getKey())+1)+",";
+        	// 整个时间段itemid dummy
+        	String act = entry.getKey().split("\\|")[1];
+        	if(act.equals("2")){
+        		for(String item :entry.getValue()){
+        			feature += "iid|"+item+":"+1+",";
+        		}
+        	}
+        		
         }
         for(Map.Entry<String, HashSet<Date>> entry: map_all_dat.entrySet()){
         	// 整个时间段最近行为时间差倒数
@@ -516,6 +645,8 @@ public class FE_Extractor {
         for(Map.Entry<String,Integer> entry: map.entrySet()){
         	// 每个月行为数
             feature += rank+"|"+entry.getKey()+"|0"+":"+Math.log((double)entry.getValue()+1)+",";
+            // 每个月行为数sqrt
+//            feature += rank+"|"+entry.getKey()+"|0s"+":"+Math.sqrt((double)entry.getValue())+",";
             // 每个月行为数占比
             String [] strsk = entry.getKey().split("\\|");
             feature += rank+"|"+entry.getKey()+"|5"+":"+(double)entry.getValue()/(double)map_all_c.get("0"+"|"+strsk[1])+",";
@@ -529,6 +660,8 @@ public class FE_Extractor {
         for(Map.Entry<String,HashSet<Integer>> entry: map_d.entrySet()){
         	// 每个月行为天数
             feature += rank+"|"+entry.getKey()+"|1"+":"+Math.log((double)entry.getValue().size()+1)+",";
+            // 每个月行为天数sqrt
+//            feature += rank+"|"+entry.getKey()+"|1s"+":"+Math.sqrt((double)entry.getValue().size())+",";
             // 每个月行为数/行为天数
             feature += rank+"|"+entry.getKey()+"|2"+":"+map.get(entry.getKey())/(double)entry.getValue().size()+",";
             // 每个月行为数/行为天数log
@@ -537,11 +670,32 @@ public class FE_Extractor {
         for(Map.Entry<String, HashSet<String>> entry: map_i.entrySet()){
         	// 每个月行为产品数
         	feature += rank+"|"+entry.getKey()+"|3"+":"+Math.log((double)entry.getValue().size()+1)+",";
+        	// 每个月行为产品数sqrt
+//        	feature += rank+"|"+entry.getKey()+"|3s"+":"+Math.sqrt((double)entry.getValue().size())+",";
         	// 每个月行为产品数/行为数
         	feature += rank+"|"+entry.getKey()+"|4"+":"+(double)entry.getValue().size()/map.get(entry.getKey())+",";
         	// 每个月行为产品数/行为数log
         	feature += rank+"|"+entry.getKey()+"|4l"+":"+Math.log((double)entry.getValue().size()/map.get(entry.getKey())+1)+",";
         }
+        
+        // lk_1
+        // for (Map.Entry<String, Integer> entry: map_all_c_FGroup.entrySet()){
+        //     // 统计每个时间间隙行为数
+        //     feature += entry.getKey()+ ":" +entry.getValue()+",";
+        // }     
+   
+        // int n_month = map_all_mon.size();
+        // int n_circle = n_month*(n_month+1)/2;
+        // feature += "0|circle_index" + ":" + n_circle +",";
+        
+        // double influence_factor = 0;
+        // if (map_all_dat.containsKey("0|2") && map_all_dat.containsKey("0|3")){
+        //    double last_buy_date = Collections.max(map_all_dat.get("0|2")).getTime()/86400000;
+        //    double last_favorite_date = Collections.max(map_all_dat.get("0|3")).getTime()/86400000;
+        //    if (last_favorite_date > last_buy_date) influence_factor = 0.172*Math.exp(-0.03*(last_favorite_date-last_buy_date));
+        // }
+        // feature += "0|favourite_after_buy" + ":" + influence_factor + ",";
+        // lk_1
         
         feature += merchant_id+":"+"1";
         
@@ -889,6 +1043,7 @@ public class FE_Extractor {
 			
 			user_feature_map.put(user,feature);
 		}
+		System.out.println("User number:"+user_feature_map.size());
 		return user_feature_map;
 	}
     
@@ -1447,6 +1602,196 @@ public class FE_Extractor {
 			feature = feature.substring(0,feature.length()-1);
 		return feature;
 	}
+    
+    //Yj
+  //获取用户商户交互行为日期,将行为日志中的“0811”这样的日期形式转换为Date形式，并存入map中
+    public static HashMap<String,List<Date>>  getdaymap(String user_id,String merchant_id, String activitiy_log) throws Exception{
+        String feature="";
+        String[] strs = activitiy_log.split("#");
+     
+        HashMap<String,List<Date>> daymap = new HashMap<String,List<Date>>();
+     
+        List<Date> list=new ArrayList<Date>();
+       
+        for(int i=0;i<strs.length;i++){  
+            String []strs2 = strs[i].split(":");
+            if(strs2.length==5) {
+            	String datestr="2014"+strs2[3];
+            	SimpleDateFormat dd=new SimpleDateFormat("yyyyMMdd"); 
+            	Date interactday=dd.parse(datestr);
+                list.add(interactday);
+            }    
+        }
+        daymap.put(user_id+"|"+merchant_id,list);
+     
+        return daymap;
+    }
+    //转换为Date形式，获得间隔天数，得到用户商户最后行为日期，方便以后得到前一天与后一天
+    public static Date  getlastday(String user_id,String merchant_id, String activitiy_log) throws Exception{
+        String[] strs = activitiy_log.split("#");
+     
+        HashMap<String,List<Date>> daymap = new HashMap<String,List<Date>>();
+     
+        List<Date> list=new ArrayList<Date>();
+       
+        for(int i=0;i<strs.length;i++){  
+            String []strs2 = strs[i].split(":");
+            if(strs2.length==5) {
+            	String datestr="2014"+strs2[3];
+            	SimpleDateFormat dd=new SimpleDateFormat("yyyyMMdd"); 
+            	Date interactday=dd.parse(datestr);
+                list.add(interactday);
+            }    
+        }
+        daymap.put(user_id+"|"+merchant_id,list);
+        Collections.sort(list);
+        int len=list.size();
+        Date lastday=list.get(len-1);
+        return lastday;
+    }
+
+    //当前用户与当前商户的最后一个交互天的前一天，当天和后一天这3天一共交互了多少个不同其他商家
+    public static HashMap<String,Integer> othermerchantcount(List<FE_Data_Raw> data_raw_list) throws Exception{
+    	HashMap<String, String> map = new HashMap<String, String>();
+    	HashMap<String,List<Date>> umdaymap=new HashMap<String,List<Date>>();
+    	HashMap<String,Integer> resultmap = new HashMap<String,Integer>();
+        int num = data_raw_list.size();
+        FE_Data_Raw d;
+
+        for(int i=0;i<num;i++){
+            d = data_raw_list.get(i);
+//            System.out.println("firsts:"+d.user_id+"|"+d.merchant_id);
+            if(!d.user_id.equals("")&&!d.merchant_id.equals("")&&!d.activity_log.equals("")&&!d.label.equals("-1")){
+            	HashMap<String,List<Date>> daymap=getdaymap(d.user_id,d.merchant_id,d.activity_log);
+            	List<Date> interactdaylist=daymap.get(d.user_id+"|"+d.merchant_id);
+	            umdaymap.put(d.user_id+"|"+d.merchant_id,interactdaylist);
+//	            System.out.println("firsts:"+d.user_id+"|"+d.merchant_id);
+            }
+        }
+        int count;
+      //得到用户商户交互的最后一天的前一天，当天，后一天交互其他商家总数
+        for(int i=0;i<num;i++){
+        	count=0;
+        	d = data_raw_list.get(i);
+//        	System.out.println("seconds:"+d.user_id+"|"+d.merchant_id);
+        	if(!d.user_id.equals("")&&!d.merchant_id.equals("")&&!d.activity_log.equals("")&&!d.label.equals("-1")){
+	        	Date lastday=getlastday(d.user_id,d.merchant_id,d.activity_log);
+	        	Calendar c=Calendar.getInstance();
+	        	c.setTime(lastday);
+	        	c.add(c.DATE, 1);
+	        	Date nextday=c.getTime();
+	            c.setTime(lastday);
+	            c.add(c.DATE, -1);
+	            Date beforeday=c.getTime();
+	            for(Map.Entry<String,List<Date>> entry: umdaymap.entrySet()){
+	            	int index=entry.getKey().indexOf("|");
+	            	String user_id=entry.getKey().substring(0, index);
+	            	String merchant_id=entry.getKey().substring(index+1);
+	            	if(user_id.equals(d.user_id) && !merchant_id.equals(d.merchant_id) &&(entry.getValue().contains(lastday) ||entry.getValue().contains(beforeday) || entry.getValue().contains(nextday))){
+	            		count ++;
+	            	}
+	            }
+	            resultmap.put(d.user_id+"|"+d.merchant_id, count);
+        	}
+        }
+//        System.out.println("准备下一发！");
+        return resultmap;
+    }
+    public static int actlog(String activity_log,String last,String before,int count,String actstr){
+		String [] strs = activity_log.split("#");
+		for(int i=0;i<strs.length;i++){	
+			String []strs2 = strs[i].split(":");
+            if(strs2.length==5) {
+            	String timestr=strs2[3];
+            	String formatstr="2014"+timestr;
+            	if((formatstr.equals(last)||formatstr.equals(before))&&strs2[4].equals(actstr)){
+            		 count ++;
+            	}
+            }
+		}
+    	return count;
+    }
+    //当前用户与当前商户的最后一个交互天的前一天，当天这两天中一共点击/收藏/购买/加购物车了多少次其他商户
+    public static HashMap<String,Integer> actcount(List<FE_Data_Raw> data_raw_list,String actstr) throws Exception{
+    	HashMap<String, String> map = new HashMap<String, String>();
+    	HashMap<String,List<Date>> umdaymap=new HashMap<String,List<Date>>();
+    	HashMap<String,Integer> resultmap = new HashMap<String,Integer>();
+        int num = data_raw_list.size();
+        FE_Data_Raw d;
+
+        for(int i=0;i<num;i++){
+            d = data_raw_list.get(i);
+            if(!d.user_id.equals("")&&!d.merchant_id.equals("")&&!d.activity_log.equals(""))
+            	map.put(d.user_id+"|"+d.merchant_id, d.activity_log);
+    	   if(!d.user_id.equals("")&&!d.merchant_id.equals("")&&!d.activity_log.equals("")&&!d.label.equals("-1")){
+          	   HashMap<String,List<Date>> daymap=getdaymap(d.user_id,d.merchant_id,d.activity_log);
+          	   List<Date> interactdaylist=daymap.get(d.user_id+"|"+d.merchant_id);
+               umdaymap.put(d.user_id+"|"+d.merchant_id,interactdaylist);
+            } 
+        }
+        int count;
+//	    String last="20141111";       
+//	    String before="20141110";
+      //得到用户商户交互的最后一天的前一天，当天，后一天交互其他商家总数
+        for(int i=0;i<num;i++){
+        	count=0;
+        	d = data_raw_list.get(i);
+//        	System.out.println("seconds:"+d.user_id+"|"+d.merchant_id);
+        	if(!d.user_id.equals("")&&!d.merchant_id.equals("")&&!d.activity_log.equals("")&&!d.label.equals("-1")){
+        		Date lastday=getlastday(d.user_id,d.merchant_id,d.activity_log);
+	        	Calendar c=Calendar.getInstance();
+	            c.setTime(lastday);
+	            c.add(c.DATE, -1);
+	            Date beforeday=c.getTime();
+	            for(Map.Entry<String,List<Date>> entry: umdaymap.entrySet()){
+	            	int index=entry.getKey().indexOf("|");
+	            	String user_id=entry.getKey().substring(0, index);
+	            	String merchant_id=entry.getKey().substring(index+1);
+	            	String activity_log=map.get(user_id+"|"+merchant_id);
+		            SimpleDateFormat dd=new SimpleDateFormat("yyyyMMdd"); 
+		            String last=dd.format(lastday);
+		            String before=dd.format(beforeday);
+	            	if(user_id.equals(d.user_id) && !merchant_id.equals(d.merchant_id)&&(entry.getValue().contains(lastday) ||entry.getValue().contains(beforeday))){
+	            		int temp=actlog(activity_log,last,before,count,actstr);
+	            		count=count+temp;
+	            	}
+	            }
+	            resultmap.put(d.user_id+"|"+d.merchant_id+"|actcount", count);
+//	            System.out.println("count:"+count);
+//	            System.out.println("计数:"+i);
+        	}
+        }
+//        for(Map.Entry<String, Integer> resultentry:resultmap.entrySet()){
+//        	
+//        }
+        return resultmap;
+    }
+
+    //统计用户商户交行为总量
+    public static String activity_log2feature(int rank,String merchant_id, String activitiy_log){
+        String feature="";
+        String [] strs = activitiy_log.split("#");
+        HashMap<String,Integer> map = new HashMap<String, Integer>();
+        for(int i=0;i<strs.length;i++){
+            String []strs2 = strs[i].split(":");
+            if(strs2.length==5) {
+            	//统计用户商户每月行为统计量
+                int month = Integer.parseInt(strs2[3].substring(0, 2));
+                int time=Integer.parseInt(strs2[3]);
+                if (map.containsKey(month + "|" + strs2[4])) {
+                    map.put(month + "|" + strs2[4], map.get(month + "|" + strs2[4]) + 1);
+                } else {
+                    map.put(month + "|" + strs2[4], 1);
+                } 
+                
+            }
+        }
+        for(Map.Entry<String,Integer> entry: map.entrySet()){
+            feature += rank+"|"+entry.getKey()+":"+Math.log((double)entry.getValue()+1)+",";
+        }
+        feature += merchant_id+":"+"1";
+        return feature;
+    }
 
     //convert the data of format 2 to your desire format,
     //data_raw_list the list of raw data
@@ -1582,10 +1927,62 @@ public class FE_Extractor {
 //        HashMap<String,HashSet<String>> userTop5Brand = statUserTopKBrand(data_raw_list, brandId2inx, 5);
 //        HashMap<String,HashSet<String>> userTop10Brand = statUserTopKBrand(data_raw_list, brandId2inx, 10);
         
-        //the feature is defined by behavior log on itself and  top 5 similar merchants
+        
+        //Yj
+//         HashMap<String,Integer> merchantCountMap=new HashMap<String,Integer>();
+//         HashMap<String,Integer> clickCountMap=new HashMap<String,Integer>();
+//         HashMap<String,Integer> storeCountMap=new HashMap<String,Integer>();
+//         HashMap<String,Integer> buyCountMap=new HashMap<String,Integer>();
+//         HashMap<String,Integer> cartCountMap=new HashMap<String,Integer>();
+//         String clickstr="0";
+//         String storestr="1";
+//         String buystr="2";
+//         String cartstr="3";
+//         try {
+//         	merchantCountMap = othermerchantcount(data_raw_list);
+// //        	System.out.println("准备！");
+//         	clickCountMap=actcount(data_raw_list,clickstr);
+//         	storeCountMap=actcount(data_raw_list,storestr);
+//         	buyCountMap=actcount(data_raw_list,buystr);
+//         	cartCountMap=actcount(data_raw_list,cartstr);
+// //        	System.out.println("输出！");
+// 		} catch (Exception e) {
+// 			// TODO Auto-generated catch block
+// 			e.printStackTrace();
+// 		}
+        int posN = 0;
+        int negN = 0;
         for(int i=0;i<num;i++){
             d = data_raw_list.get(i);
             if(!d.label.equals("-1")&&!d.activity_log.equals("")){
+                if(d.label.equals("1"))
+                    posN++;
+                if(d.label.equals("0"))
+                    negN++;
+            }
+        }
+        double p = 0;
+        if(negN>13*posN)
+            p = (double)((negN-posN*13)/(negN*1.0));
+        
+        // System.out.println(p);
+
+        int posN_after_sample = 0;
+        int negN_after_sample = 0;
+
+        //the feature is defined by behavior log on itself and  top 5 similar merchants
+        for(int i=0;i<num;i++){
+            d = data_raw_list.get(i);
+            if(d.label.equals("0")){
+                double rd = Math.random();
+                if(rd<p)
+                    continue;
+            }
+            if(!d.label.equals("-1")&&!d.activity_log.equals("")){
+                if(d.label.equals("1"))
+                    posN_after_sample++;
+                if(d.label.equals("0"))
+                    negN_after_sample++;
                 FE_Data_Processed d2 = new FE_Data_Processed();
                 d2.user_id = d.user_id;
                 d2.merchant_id = d.merchant_id;
@@ -1599,7 +1996,7 @@ public class FE_Extractor {
                 //use ub weight
 //                String ubmb = ubrandUmbrand(d.user_id, d.merchant_id, user_brand, merchant_brand);
                 if(!ucmc.equals(""))
-                	d2.features += "," + ucmc;
+               	    d2.features += "," + ucmc;
                 if(!ubmb.equals(""))
                 	d2.features += "," + ubmb;
 //                String ubw = dummyUBweight(d,ub_weight_map,brandId2inx);
@@ -1612,6 +2009,28 @@ public class FE_Extractor {
 //                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop5Cat, userTop5Brand, 5);
 //                if(!ut10f.equals(""))
 //                	d2.features += ","+extractUserTopKfeature(0, d, catId2inx, brandId2inx, userTop10Cat, userTop10Brand, 10);
+                //YJ
+                // int countothermerchant=0;
+                // int clickCnt=0;
+                // int storeCnt=0;
+                // int buyCnt=0;
+                // int cartCnt=0;
+                // countothermerchant=merchantCountMap.get(d.user_id+"|"+d.merchant_id)==null?0:merchantCountMap.get(d.user_id+"|"+d.merchant_id);
+                // clickCnt=clickCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount")==null?0:clickCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount");
+                // storeCnt=storeCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount")==null?0:storeCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount");
+                // buyCnt=buyCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount")==null?0:buyCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount");
+                // cartCnt=cartCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount")==null?0:cartCountMap.get(d.user_id+"|"+d.merchant_id+"|actcount");
+                // if(countothermerchant!=0)
+                // 	d2.features +=","+"last3daycount"+":"+Math.log(countothermerchant+1);
+                // if(clickCnt!=0)
+                //     d2.features +=","+"last3dayclickcount"+":"+Math.log(clickCnt+1);
+                // if(storeCnt!=0)
+                //     d2.features +=","+"last3daystorecount"+":"+Math.log(storeCnt+1);
+                // if(buyCnt!=0)
+                //     d2.features +=","+"last3daybuycount"+":"+Math.log(buyCnt+1);
+                // if(cartCnt!=0)
+                //     d2.features +=","+"last3daycartcount"+":"+Math.log(cartCnt+1);
+                
                 d2.label = d.label;
                 List<String> list = similarity_merchants.get(d.merchant_id);
                 for(int j=0;j<5;j++){
@@ -1621,7 +2040,8 @@ public class FE_Extractor {
 //                        d2.features += "," + activity_log2feature(j+1,list.get(j),d.age_range,d.gender,map.get(d2.user_id+"|"+list.get(j)),brandId2inx,catId2inx);
                     }
                 }
-                d2.features += "," + uf_map.get(d.user_id);
+                String uf = uf_map.get(d.user_id);
+                d2.features += "," + uf;
                 // age
                 if (d.age_range==null||d.age_range.equals("-999")){
                 	d2.features += "," + "u|age|" + "0" + ":" + "1";
@@ -1647,7 +2067,27 @@ public class FE_Extractor {
 //                d2.features += "," + "u|a|g|" + age +"|" + gender + ":" + "1";
                 
                 //add merchant feature
-                d2.features += "," + merchant_feature.get(d.merchant_id);
+                String mf = merchant_feature.get(d.merchant_id);
+                d2.features += "," + mf;
+                
+                //UF*MF
+//                String ufmf = "";
+//                String [] uf_array_str = uf.split(",");
+//                String [] mf_array_str = mf.split(",");
+//                for(String ufi : uf_array_str){
+//                	String ufi_key = ufi.split(":")[0];
+//                	String ufi_f = ufi.split(":")[1];
+//                	for(String mfi : mf_array_str){
+//                		String mfi_key = mfi.split(":")[0];
+//                		String mfi_f =  mfi.split(":")[1];
+//                		ufmf += ufi_key+"&"+mfi_key+":"+Math.log(Double.parseDouble(ufi_f)*Double.parseDouble(mfi_f))+",";
+//                	}
+//                }
+//                if(!ufmf.equals(""))
+//                	ufmf = ufmf.substring(0,ufmf.length()-1);
+//                d2.features += "," + ufmf;
+                
+                
                 //how many sales rankTopK(5,10) b,c in merchant
 //                String rtb = numOfMSalesBrand(d.merchant_id, merchant_brand, brandSalesRank);
 //                if(!rtb.equals(""))
@@ -1666,6 +2106,7 @@ public class FE_Extractor {
             }
         }
         System.out.println(data_list.size());
+        System.out.println(posN_after_sample+","+negN_after_sample);
         return data_list;
     }
 }
@@ -1726,6 +2167,22 @@ public class FE_Extractor {
         	map.put("u|gender|"+gender, count);
         	count++;
         }
+        
+      // 615 最喜爱的TOPK品牌/类目有多少个在merchant里有交互/买过
+//      int [] tK = {5,10};
+//      for(int rank=0;rank<=0;rank++)
+//      	for(int k : tK)
+//      		for(int act=0;act<=1;act++){
+//      			map.put(rank+"|"+"uTop"+k+"C|"+act, count);
+//      			count++;
+//      		}
+//      for(int rank=0;rank<=0;rank++)
+//      	for(int k : tK)
+//      		for(int act=0;act<=1;act++){
+//      			map.put(rank+"|"+"uTop"+k+"B|"+act, count);
+//      			count++;
+//      		}
+        
         //merchant特征
         for (int action=0;action<=3;action++)
         	for(int stat_type=0;stat_type<=6;stat_type++){
@@ -1757,6 +2214,25 @@ public class FE_Extractor {
         	map.put("m0|"+st, count);
         	count++;
         }
+        // 商家各个age/gender购买占比 616
+        for(int age=0;age<=8;age++){
+        	map.put("m0BuyAge|"+age, count);
+        	count++;
+        }
+        for(int gender=0;gender<=2;gender++){
+        	map.put("m0BuyGen|"+gender, count);
+        	count++;
+        }
+      // 617 how many sales rankTopK(5,10) b,c in merchant
+//      int [] rt = {5,10};
+//      for(int k : rt){
+//      	map.put("mbRank|"+k, count);
+//      	count++;
+//      }
+//      for(int k :rt){
+//      	map.put("mcRank|"+k, count);
+//      	count++;
+//      }
              
         return map;
     }
@@ -1837,9 +2313,10 @@ public class FE_Extractor {
         	if(entry.getValue().size()>1)
         		feature += entry.getKey() + "|7" + ":" +(double)(Collections.max(entry.getValue()).getTime()/86400000-Collections.min(entry.getValue()).getTime()/86400000)+",";
         }
+        
         if(feature!=null&&!feature.equals("")){
 			//System.out.println(feature.length());
-			feature = feature.substring(0,feature.length()-2);
+			feature = feature.substring(0,feature.length()-1);
 		}
         
         return feature;
@@ -2091,14 +2568,198 @@ public class FE_Extractor {
 		return user_feature_map;
 	}
     
-    //merchant特征提取
-//    public static HashMap<String,String> extractMerchantFeature(List<FE_Data_Raw> data_raw_list){
-//    	int num = data_raw_list.size();
-//		Date last_day = new Date(2014,11,12);
-//		HashMap<String,String> merchant_feature_map = new HashMap<String, String>();
-//		
-//		return merchant_feature_map;
-//    }
+    // 最喜爱的TOPK品牌/类目有多少个在merchant里有交互/买过 615
+    public static String extractUserTopKfeature(int rank,FE_Data_Raw d, HashMap<String,String> catid2inx,HashMap<String,String> brandid2inx, HashMap<String,HashSet<String>> userTopKCat, HashMap<String,HashSet<String>> userTopKBrand, int K) {
+		String feature = "";
+		String [] strs = d.activity_log.split("#");
+		HashSet<String> userTopKBehCatInM = new HashSet<String>();
+		HashSet<String> userTopKBuyCatInM = new HashSet<String>();
+		HashSet<String> userTopKBehBrandInM = new HashSet<String>();
+		HashSet<String> userTopKBuyBrandInM = new HashSet<String>();
+		for(int i=0;i<strs.length;i++){
+			String []strs2 = strs[i].split(":");
+			if(strs2.length==5&&brandid2inx.containsKey(strs2[2])&&catid2inx.containsKey(strs2[1])){
+				String bid = brandid2inx.get(strs2[2]);
+				String cid = catid2inx.get(strs2[1]);
+				if(strs2.length==5) {
+					userTopKBehCatInM.add(cid);
+					userTopKBehBrandInM.add(bid);
+					if(strs2[4].equals("2")){
+						userTopKBuyCatInM.add(cid);
+						userTopKBuyBrandInM.add(bid);
+					}
+				}
+			}
+		}
+		//cat交互
+		HashSet<String> union = new HashSet<String>();
+		union.addAll(userTopKCat.get(d.user_id));
+		union.retainAll(userTopKBehCatInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"C|"+"0"+":"+Math.log(union.size()+1)+",";
+		//cat购买
+		union.clear();
+		union.addAll(userTopKCat.get(d.user_id));
+		union.retainAll(userTopKBuyCatInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"C|"+"1"+":"+Math.log(union.size()+1)+",";
+		//brand交互
+		union.clear();
+		union.addAll(userTopKBrand.get(d.user_id));
+		union.retainAll(userTopKBehBrandInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"B|"+"0"+":"+Math.log(union.size()+1)+",";
+		//brand购买
+		union.clear();
+		union.addAll(userTopKBrand.get(d.user_id));
+		union.retainAll(userTopKBuyBrandInM);
+		if(union.size()!=0)
+			feature += rank+"|"+"uTop"+K+"B|"+"1"+":"+Math.log(union.size()+1)+",";
+		if(!feature.equals(""))
+			feature = feature.substring(0,feature.length()-1);
+		return feature;
+	}
+    // 获得用户交互最多的K个类别
+    public static HashMap<String,HashSet<String>> statUserTopKCat(List<FE_Data_Raw> data_raw_list, HashMap<String,String> catid2inx, int K) {
+    	HashMap<String,HashSet<String>> userTopKCat_map = new HashMap<String, HashSet<String>>();
+    	HashMap<String, TreeMap<String, Double>> userBehCatCount = new HashMap<String, TreeMap<String,Double>>();
+    	int num = data_raw_list.size();
+    	FE_Data_Raw d;
+    	Date firstDate = new Date(2014,5,11);
+    	for(int i=0;i<num;i++){
+    		d = data_raw_list.get(i);
+    		if(d.activity_log.equals(""))
+    			continue;
+    		String [] strs = d.activity_log.split("#");
+    		if(!userBehCatCount.containsKey(d.user_id)){
+    			TreeMap<String,Double> cat_count_map = new TreeMap<String, Double>();
+    			userBehCatCount.put(d.user_id, cat_count_map);
+    		}
+    		TreeMap<String, Double> cat_count_map = userBehCatCount.get(d.user_id);
+    		for(int k=0;k<strs.length;k++){
+    			String []strs2 = strs[k].split(":");
+	            if (strs2.length==5&&catid2inx.containsKey(strs2[1])){
+	            	String cid = catid2inx.get(strs2[1]);
+	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
+    				int day = Integer.parseInt(strs2[3].substring(2,4));
+    				if (month==11&&day>11)
+    					day = 11;
+    				Date dat = new Date(2014,month,day);
+    				double beh_w;
+    				if(strs2[4].equals("0"))
+    					beh_w = 0.5;
+    				else if(strs2[4].equals("1")||strs2[4].equals("3"))
+    					beh_w = 1;
+    				else
+    					beh_w = 5;
+    				double time_w = ((int)(dat.getTime()/86400000 - firstDate.getTime()/86400000)/7+1)/10;
+	            	if(cat_count_map.containsKey(cid)){
+	            		cat_count_map.put(cid, cat_count_map.get(cid)+beh_w*time_w);
+	            	}else{
+	            		cat_count_map.put(cid, beh_w*time_w);
+	            	}
+	            }
+    		}
+    		userBehCatCount.put(d.user_id, cat_count_map);
+    	}
+    	for(Map.Entry<String, TreeMap<String,Double>> entry : userBehCatCount.entrySet()){
+    		HashSet<String> topKCat = new HashSet<String>();
+    		
+    		TreeMap<String,Double> cat_count_map = entry.getValue();
+    		List<Entry<String, Double>> li = new ArrayList<Map.Entry<String,Double>>(cat_count_map.entrySet());
+    		Collections.sort(li, new Comparator<Entry<String, Double>>() {
+				@Override
+				public int compare(Entry<String, Double> o1,
+						Entry<String, Double> o2) {
+					double re = o2.getValue() - o1.getValue();
+					if(re>0)
+						return 1;
+					else if(re<0)
+						return -1;
+					else return 0;
+				}
+			});
+    		int lis = li.size()-1;
+    		for(int i=0;i<K;i++){
+    			if(i>lis)
+    				break;
+    			topKCat.add(li.get(i).getKey());
+    		}
+    		userTopKCat_map.put(entry.getKey(), topKCat);
+    	}
+    	return userTopKCat_map;
+	}
+    // 获得用户交互最多的K个品牌
+    public static HashMap<String,HashSet<String>> statUserTopKBrand(List<FE_Data_Raw> data_raw_list, HashMap<String,String> brandid2inx, int K) {
+    	HashMap<String,HashSet<String>> userTopKBrand_map = new HashMap<String, HashSet<String>>();
+    	HashMap<String, TreeMap<String, Double>> userBehBrandCount = new HashMap<String, TreeMap<String,Double>>();
+    	int num = data_raw_list.size();
+    	FE_Data_Raw d;
+    	Date firstDate = new Date(2014,5,11);
+    	for(int i=0;i<num;i++){
+    		d = data_raw_list.get(i);
+    		if(d.activity_log.equals(""))
+    			continue;
+    		String [] strs = d.activity_log.split("#");
+    		if(!userBehBrandCount.containsKey(d.user_id)){
+    			TreeMap<String,Double> brand_count_map = new TreeMap<String, Double>();
+    			userBehBrandCount.put(d.user_id, brand_count_map);
+    		}
+    		TreeMap<String, Double> brand_count_map = userBehBrandCount.get(d.user_id);
+    		for(int k=0;k<strs.length;k++){
+    			String []strs2 = strs[k].split(":");
+	            if (strs2.length==5&&brandid2inx.containsKey(strs2[2])){
+	            	String bid = brandid2inx.get(strs2[2]);
+	            	int month = Integer.parseInt(strs2[3].substring(0, 2));
+    				int day = Integer.parseInt(strs2[3].substring(2,4));
+    				if (month==11&&day>11)
+    					day = 11;
+    				Date dat = new Date(2014,month,day);
+    				double beh_w;
+    				if(strs2[4].equals("0"))
+    					beh_w = 0.5;
+    				else if(strs2[4].equals("1")||strs2[4].equals("3"))
+    					beh_w = 1;
+    				else
+    					beh_w = 5;
+    				double time_w = ((int)(dat.getTime()/86400000 - firstDate.getTime()/86400000)/7+1)/10;
+	            	if(brand_count_map.containsKey(bid)){
+	            		brand_count_map.put(bid, brand_count_map.get(bid)+beh_w*time_w);
+	            	}else{
+	            		brand_count_map.put(bid, beh_w*time_w);
+	            	}
+	            }
+    		}
+    		userBehBrandCount.put(d.user_id, brand_count_map);
+    	}
+    	for(Map.Entry<String, TreeMap<String,Double>> entry : userBehBrandCount.entrySet()){
+    		HashSet<String> topKBrand = new HashSet<String>();
+    		
+    		TreeMap<String,Double> brand_count_map = entry.getValue();
+    		List<Entry<String, Double>> li = new ArrayList<Map.Entry<String,Double>>(brand_count_map.entrySet());
+    		Collections.sort(li, new Comparator<Entry<String, Double>>() {
+				@Override
+				public int compare(Entry<String, Double> o1,
+						Entry<String, Double> o2) {
+					double re = o2.getValue() - o1.getValue();
+					if(re>0)
+						return 1;
+					else if(re<0)
+						return -1;
+					else return 0;
+				}
+				
+			});
+    		int lis = li.size()-1;
+    		for(int i=0;i<K;i++){
+    			if(i>lis)
+    				break;
+    			topKBrand.add(li.get(i).getKey());
+    		}
+    		userTopKBrand_map.put(entry.getKey(), topKBrand);
+    	}
+    	return userTopKBrand_map;
+	}
     
 
     //convert the data of format 2 to your desire format,
